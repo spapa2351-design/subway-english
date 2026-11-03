@@ -19,8 +19,10 @@
 :root[data-theme="dark"]{ --page:#141a1e; --ink:#e6ece9; color-scheme:dark; }
 html{scroll-padding-top:env(safe-area-inset-top,0px);}
 *{box-sizing:border-box}
+button{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--page);color:var(--ink);font-family:"Press Start 2P",system-ui,sans-serif;}
-.wrap{width:min(100% - 24px, (100vh - 300px) * 16 / 9, 1280px);min-width:300px;margin:12px auto}
+:root{--cw:270px}
+.wrap{width:min(100% - 24px, (100vh - 290px) * 16 / 9 + var(--cw) + 44px, 1400px);min-width:300px;margin:12px auto}
 .cab{background:var(--cab);border:4px solid var(--deep);padding:12px}
 .screen{position:relative;border:4px solid var(--deep)}
 canvas#cv{display:block;width:100%;aspect-ratio:16/9;image-rendering:pixelated;background:#0d0f14}
@@ -31,7 +33,8 @@ canvas#cv{display:block;width:100%;aspect-ratio:16/9;image-rendering:pixelated;b
 .sgtag{font-size:clamp(7px,.65vw,9px);color:#6b7a82}
 .sgname{font-size:clamp(13px,1.5vw,22px);line-height:1.4}
 .sgnb{display:flex;justify-content:space-between;gap:14px;margin-top:8px;font-size:clamp(7px,.65vw,9px);color:#4c5a62;border-top:2px solid var(--line);padding-top:6px}
-.hudtop{position:absolute;top:2.5%;left:2.5%;right:2.5%;display:flex;justify-content:flex-end;color:#fff;
+.nameplate{font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;font-weight:800;font-size:clamp(11px,1.2vw,17px);text-shadow:none;background:#1b2329;color:#ffd23f;border:3px solid #ffd23f;padding:3px 10px 4px;margin-right:14px;align-self:center}
+.hudtop{position:absolute;top:2.5%;left:2.5%;right:2.5%;display:flex;justify-content:flex-end;align-items:center;color:#fff;
   font-size:clamp(9px,1vw,14px);text-shadow:2px 2px 0 #000;pointer-events:none}
 .gauge{position:absolute;top:11%;left:22%;width:56%;pointer-events:none}
 .glabel{display:flex;justify-content:space-between;color:#fff;font-size:clamp(8px,.85vw,12px);text-shadow:2px 2px 0 #000;margin-bottom:8px}
@@ -42,6 +45,18 @@ canvas#cv{display:block;width:100%;aspect-ratio:16/9;image-rendering:pixelated;b
 .arrow{position:absolute;top:-9px;bottom:-9px;width:5px;background:var(--red);transform:translateX(-50%);box-shadow:0 0 0 2px #fff}
 .toast{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);background:rgba(27,35,41,.92);border:4px solid var(--yellow);
   color:#fff;padding:16px 22px;text-align:center;pointer-events:none;max-width:80%;font-size:clamp(11px,1.3vw,18px);line-height:1.6}
+.toast.top{top:4%;transform:translateX(-50%);font-size:clamp(9px,1vw,14px);padding:10px 16px}
+.praise.top{align-items:flex-start;padding-top:2.5%;background:none}
+.praise.top .pbox{padding:10px 22px;display:flex;align-items:center;gap:14px}
+.praise.top .stars{font-size:clamp(12px,1.3vw,18px);margin:0}
+.praise.top .pmsg{font-size:clamp(14px,1.8vw,24px)}
+.praise{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);z-index:50;pointer-events:none}
+.praise[hidden]{display:none}
+.praise .pbox{background:var(--yellow);color:var(--deep);border:6px solid var(--deep);box-shadow:8px 8px 0 rgba(0,0,0,.45);padding:clamp(18px,2.4vw,34px) clamp(26px,4vw,60px);text-align:center;animation:ppop .35s steps(4)}
+.praise .stars{font-size:clamp(18px,2.4vw,34px);letter-spacing:.3em;margin-bottom:12px}
+.praise .pmsg{font-size:clamp(20px,3vw,44px);line-height:1.3}
+.praise .pmsg.ko{font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;font-weight:900}
+@keyframes ppop{from{transform:scale(.4)}to{transform:scale(1)}}
 .sub{background:var(--deep);color:#fff;padding:14px 18px;min-height:80px;border-top:4px solid var(--line)}
 .sub .who{color:var(--yellow);font-size:clamp(8px,.8vw,11px);margin-bottom:10px}
 .sub .en{font-size:clamp(11px,1.25vw,18px);line-height:1.7}
@@ -57,7 +72,34 @@ canvas#cv{display:block;width:100%;aspect-ratio:16/9;image-rendering:pixelated;b
 .train{position:absolute;top:10px;width:38px;height:20px;transform:translateX(-50%);background:#e9ece6;border:3px solid var(--deep);
   box-shadow:inset 0 -5px 0 var(--line);z-index:2}
 .train::before{content:"";position:absolute;right:3px;top:3px;width:8px;height:5px;background:#5fb9e6}
-.ctrl{display:grid;grid-template-columns:1fr 1fr 1fr 1.2fr 1.2fr;gap:12px;margin-top:12px}
+/* right-side driver console */
+.cab{display:grid;grid-template-columns:minmax(0,1fr) var(--cw);gap:12px}
+.view{min-width:0}
+.console{background:#1f2a40;border:4px solid var(--deep);box-shadow:inset 0 0 0 3px #34425e;padding:12px;display:flex;flex-direction:column;gap:10px}
+.ctrl{display:flex;flex-direction:column;gap:10px;flex:1}
+.cpanel{position:relative;background:#141c2c;border:3px solid #0b111c;box-shadow:inset 2px 2px 0 #2b3852;padding:10px}
+.cpanel::before,.cpanel::after{content:"";position:absolute;top:4px;left:4px;width:4px;height:4px;background:#56627a}
+.cpanel::after{left:auto;right:4px}
+.meter{display:flex;align-items:flex-end;justify-content:center;gap:8px;padding-top:22px}
+.mlabel{position:absolute;left:14px;top:8px;font-size:7px;color:#8a97ad;letter-spacing:.15em}
+.seg{font-size:clamp(22px,2.3vw,32px);color:#ff3b2f;text-shadow:0 0 6px rgba(255,59,47,.7);background:#2a0c0c;padding:10px 10px 6px;border:3px solid #0b111c;min-width:3.6ch;text-align:right}
+.munit{font-size:9px;color:#c9d2df;margin-bottom:4px}
+.vsel{display:grid;grid-template-columns:1fr 1fr;border:3px solid #0b111c}
+.vbtn{font-family:inherit;font-size:clamp(9px,.75vw,11px);padding:9px 4px;border:0;background:#2b3852;color:#c9d2df;cursor:pointer}
+.vbtn.sel{background:#ffd23f;color:#1b2329;box-shadow:inset -3px -3px 0 #b8941c}
+.cplate small{font-size:1em;opacity:.6}
+.cplate{font-size:8px;color:#c9d2df;letter-spacing:.2em;margin:2px 0 -4px 2px}
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.drive{display:grid;grid-template-columns:104px 1fr;grid-template-rows:1fr 1fr;gap:8px;flex:1;min-height:170px}
+.mc{grid-row:1/3;position:relative;background:#141c2c;border:3px solid #0b111c;min-height:150px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.mc.grab{cursor:grabbing}
+.mc .slot{position:absolute;left:50%;top:14px;bottom:14px;width:14px;transform:translateX(-50%);background:#05080e;border:2px solid #34425e}
+.mc .mk{position:absolute;left:4px;font-size:7px;color:#8a97ad;transform:translateY(-50%)}
+.mc .handle{position:absolute;left:50%;top:50%;width:84px;height:34px;transform:translate(-50%,-50%);background:#c7ccd4;border:4px solid #0b111c;box-shadow:inset -4px -4px 0 #8d949f,4px 4px 0 rgba(0,0,0,.4);transition:top .12s steps(3)}
+.mc .handle::before{content:"";position:absolute;left:12px;right:12px;top:7px;height:4px;background:#8d949f;box-shadow:0 8px 0 #8d949f}
+.mc:hover .handle,.mc.grab .handle{background:#e3e7ec}
+.mc[data-pos="up"] .handle{top:16%}
+.mc[data-pos="down"] .handle{top:84%}
 .closeb{background:var(--yellow);box-shadow:inset -4px -4px 0 #b8941c}
 .closeb:active,.closeb.press{box-shadow:inset 4px 4px 0 #b8941c}
 .closeb.ready{outline:4px solid #fff;outline-offset:2px}
@@ -65,26 +107,34 @@ canvas#cv{display:block;width:100%;aspect-ratio:16/9;image-rendering:pixelated;b
   box-shadow:inset -4px -4px 0 #b4bcc2;cursor:pointer;line-height:1.4;touch-action:none;user-select:none;-webkit-user-select:none}
 .btn:active,.btn.press{box-shadow:inset 4px 4px 0 #b4bcc2;transform:translateY(2px)}
 .btn small{display:block;font-size:.65em;margin-top:8px;opacity:.7}
+.console .btn{font-size:clamp(9px,.75vw,11px);padding:10px 2px 9px;border-width:3px;border-color:#0b111c;line-height:1.5}
+.console .drive .btn{font-size:clamp(10px,.9vw,13px);padding:14px 4px}
+.btn .lamp{display:block;width:16px;height:8px;margin:0 auto 7px;background:#5a6270;border:2px solid #0b111c}
+.btn.press .lamp,.closeb.ready .lamp{background:#fff6b0;box-shadow:0 0 8px #ffe36a}
 .power{background:#00a84d;color:#fff;box-shadow:inset -4px -4px 0 #00753a}
 .power:active,.power.press{box-shadow:inset 4px 4px 0 #00753a}
 .brake{background:var(--red);color:#fff;box-shadow:inset -4px -4px 0 #a3241f}
 .brake:active,.brake.press{box-shadow:inset 4px 4px 0 #a3241f}
 button:focus-visible{outline:4px solid var(--yellow);outline-offset:2px}
-.tools{display:flex;gap:10px;margin-top:12px;align-items:center;flex-wrap:wrap}
+.tools{display:flex;gap:10px;margin-top:auto;align-items:center;flex-wrap:wrap}
 .small{font-family:inherit;font-size:clamp(9px,.85vw,12px);padding:10px 12px;border:3px solid var(--deep);background:var(--paper);color:var(--deep);cursor:pointer}
 .tools .spacer{flex:1}
-.tools .stat{color:#fff;font-size:clamp(9px,.85vw,12px)}
-.quiz{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);width:min(92%,820px);display:grid;grid-template-columns:auto 1fr;gap:14px;
-  background:rgba(244,244,238,.97);color:var(--deep);border:4px solid var(--deep);padding:14px;align-items:center}
-.quiz canvas{width:80px;height:80px;image-rendering:pixelated}
-.quiz .en{font-size:clamp(10px,1.1vw,15px);line-height:1.8}
-.opts{grid-column:1/-1;display:grid;grid-template-columns:repeat(var(--n,3),1fr);gap:10px}
-.opt{font-family:inherit;font-size:clamp(9px,.9vw,12px);padding:14px 8px;border:4px solid var(--deep);background:#fff;color:var(--deep);
-  box-shadow:inset -3px -3px 0 #c7cdd1;cursor:pointer;line-height:1.6}
-.opt.ok{background:#00a84d;color:#fff}
-.opt.bad{background:var(--red);color:#fff}
+.tools .stat{color:#fff;font-size:clamp(8px,.7vw,10px);line-height:1.6}
 .cover{position:absolute;inset:0;background:rgba(18,24,28,.93);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;padding:3%;gap:clamp(10px,1.3vw,18px)}
+.punch{gap:clamp(14px,2vw,26px)}
+.pname,.punchbtn,.scap,.sskip{font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;font-weight:800}
+.pname{font-size:clamp(14px,1.6vw,22px);color:#ffd23f;border:3px solid #ffd23f;padding:4px 14px}
+.punchbtn{font-size:clamp(28px,4.4vw,60px);padding:clamp(14px,1.8vw,24px) clamp(40px,6vw,90px);background:var(--yellow);color:var(--deep);border:6px solid var(--deep);
+  box-shadow:inset -6px -6px 0 #b8941c,0 0 0 4px #ffd23f;cursor:pointer;letter-spacing:.2em;animation:pbeat 1.2s steps(2) infinite}
+.punchbtn:active{box-shadow:inset 6px 6px 0 #b8941c}
+@keyframes pbeat{50%{transform:scale(1.05)}}
+.story{position:absolute;inset:0;cursor:pointer}
+.scap{position:absolute;left:50%;top:3%;transform:translateX(-50%);width:min(86%,900px);background:rgba(15,20,26,.9);border:4px solid #ffd23f;color:#fff;
+  padding:clamp(10px,1.4vw,18px) clamp(14px,2vw,26px);font-size:clamp(15px,1.9vw,27px);line-height:1.5;text-align:center;word-break:keep-all}
+.snext{color:#ffd23f;margin-left:12px;font-size:.7em;animation:recblink 1s steps(2) infinite}
+.sskip{position:absolute;bottom:3%;right:2.5%;font-size:clamp(10px,1vw,14px);padding:8px 12px;background:rgba(15,20,26,.75);color:#c9d2df;border:2px solid #56627a;cursor:pointer}
+body.storymode .stsign,body.storymode .hudtop{display:none}
 .cover h1{margin:0;font-size:clamp(18px,2.6vw,36px);color:var(--yellow);line-height:1.3}
 .cover ul{list-style:none;padding:0;margin:0;font-size:clamp(9px,.9vw,13px);line-height:2.1;color:#e7ecef}
 .levels{display:flex;gap:clamp(8px,1.2vw,16px)}
@@ -120,16 +170,13 @@ body.speaking .map,body.speaking .ctrl,body.speaking .tools>:not(#bAdmin){opacit
 @media (prefers-reduced-motion:reduce){.radiobox.tx canvas,.ptthint{animation:none}}
 .who2{font-size:clamp(8px,.8vw,11px);color:#6b7a82;margin-bottom:10px}
 .heard{font-size:clamp(9px,.9vw,12px);color:#4c5a62;margin-top:12px;line-height:1.7;min-height:1.7em}
+#sayTarget.ko{font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;font-weight:800;word-break:keep-all;line-height:1.55}
 #sayTarget .hit{color:#00a84d}
 #sayTarget .miss{color:#e8433f;text-decoration:underline}
 #sayTarget .qline{font-size:.85em;margin:3px 0;line-height:1.5}
 #sayTarget .qline.bad{color:#e8433f;text-decoration:line-through}
 #sayTarget .qline.ok,#sayTarget .qline.rev{color:#00a84d}
-.row3{display:grid;grid-template-columns:1fr 1.6fr;gap:12px}
-.pbtn.speak{background:#00a84d;color:#fff;box-shadow:inset -4px -4px 0 #00753a;touch-action:none;user-select:none;-webkit-user-select:none}
-.pbtn.speak.on{background:var(--red);box-shadow:inset -4px -4px 0 #a3241f;animation:recblink 1s steps(2) infinite}
 @keyframes recblink{50%{filter:brightness(1.25)}}
-@media (prefers-reduced-motion:reduce){.pbtn.speak.on{animation:none}}
 .qwrap{display:contents}
 .qtop{position:absolute;top:3%;left:50%;transform:translateX(-50%);width:min(94%,1000px);display:flex;gap:18px;align-items:center;
   background:rgba(244,244,238,.97);color:var(--deep);border:4px solid var(--deep);padding:14px 20px}
@@ -137,7 +184,6 @@ body.speaking .map,body.speaking .ctrl,body.speaking .tools>:not(#bAdmin){opacit
 .qtop .en{font-size:clamp(14px,1.8vw,26px);line-height:1.6}
 .pop{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);width:min(92%,860px);background:rgba(27,35,41,.94);
   border:4px solid var(--yellow);padding:14px;display:grid;gap:12px}
-.pop .opt{font-size:clamp(10px,1.15vw,16px);padding:16px 8px}
 .poptitle{color:#fff;text-align:center;font-size:clamp(10px,1vw,14px)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .pbtn{font-family:inherit;font-size:clamp(12px,1.4vw,20px);padding:20px 10px;border:4px solid var(--deep);background:#fff;color:var(--deep);
@@ -145,15 +191,17 @@ body.speaking .map,body.speaking .ctrl,body.speaking .tools>:not(#bAdmin){opacit
 .pbtn:active{box-shadow:inset 4px 4px 0 #c7cdd1;transform:translateY(2px)}
 .closep{background:var(--yellow);box-shadow:inset -4px -4px 0 #b8941c;width:100%}
 [hidden]{display:none!important}
-@media (max-width:700px){.ctrl{gap:6px}.btn{padding:12px 4px}.st .n{display:none}.levels{flex-direction:column}}
+@media (max-width:1000px){.wrap{width:calc(100% - 24px)}.cab{grid-template-columns:1fr}.console .cplate{display:none}.ctrl{display:grid;grid-template-columns:1fr 1fr;gap:10px}.meter,.dgrid,.vsel{grid-column:1}.drive{grid-column:2;grid-row:1/3;min-height:0}}
+@media (max-width:700px){.st .n{display:none}.levels{flex-direction:column}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="cab">
+    <div class="view">
     <div class="screen">
       <canvas id="cv" width="480" height="270" aria-label="Subway train view"></canvas>
-      <div class="hudtop"><span id="hNext" hidden></span><span id="hStars">★ 0</span></div>
+      <div class="hudtop"><span class="nameplate">기관사 · 조승우</span><span id="hStars">★ 0</span></div>
       <div class="stsign" id="stSign" aria-live="polite">
         <div class="sgtop"><span class="sgln" id="sgLn">2</span><span class="sgtag" id="sgTag">THIS STOP</span></div>
         <div class="sgname" id="sgName"></div>
@@ -164,6 +212,7 @@ body.speaking .map,body.speaking .ctrl,body.speaking .tools>:not(#bAdmin){opacit
         <div class="gbar"><div class="zone-good"></div><div class="zone-perf"></div><div class="stopline"></div><div class="arrow" id="arrow"></div></div>
       </div>
       <div class="toast" id="toast" hidden></div>
+      <div class="praise" id="praise" hidden><div class="pbox"><div class="stars">★★★</div><div class="pmsg" id="praiseMsg"></div></div></div>
       <div class="qwrap" id="sayCard" hidden>
         <div class="dim"></div>
         <div class="qtop say"><div class="grow"><div class="who2" id="sayWho">Your announcement</div><div class="en" id="sayTarget"></div><div class="heard" id="sayHeard"></div></div><button class="pbtn listen" id="sListen">🔊 Listen (R)</button></div>
@@ -175,7 +224,6 @@ body.speaking .map,body.speaking .ctrl,body.speaking .tools>:not(#bAdmin){opacit
       </div>
       <div class="qwrap" id="quiz" hidden>
         <div class="qtop"><canvas id="pax" width="16" height="16"></canvas><div class="en" id="qEn"></div></div>
-        <div class="pop"><div class="opts" id="opts"></div></div>
       </div>
       <div class="pop" id="doorPop" hidden>
         <div class="poptitle">Which doors will you open?</div>
@@ -184,6 +232,16 @@ body.speaking .map,body.speaking .ctrl,body.speaking .tools>:not(#bAdmin){opacit
       <div class="pop" id="closePop" hidden>
         <button class="pbtn closep" id="pC">▶◀ Close the doors</button>
       </div>
+      <div class="cover punch" id="punch" hidden>
+        <h1>Subway English Driver</h1>
+        <div class="pname">기관사 · 조승우</div>
+        <button class="punchbtn" id="punchBtn">출근</button>
+        <div class="note">Enter</div>
+      </div>
+      <div class="story" id="story" hidden>
+        <button class="sskip" id="storySkip">건너뛰기 ▶▶</button>
+        <div class="scap"><span id="storyCap"></span><span class="snext">▶</span></div>
+      </div>
       <div class="cover" id="title">
         <h1>Subway English Driver</h1>
         <div class="levels" id="levels"></div>
@@ -191,7 +249,7 @@ body.speaking .map,body.speaking .ctrl,body.speaking .tools>:not(#bAdmin){opacit
           <li>Hold ↑ to go. Hold ↓ or Space to brake.</li>
           <li>Stop the subway with the arrow on yellow.</li>
           <li>Listen and open the doors with ← or →.</li>
-          <li>Help passengers. Press 1, 2 or 3.</li>
+          <li>Help passengers. Answer them with the radio.</li>
           <li>Use the radio to make announcements. Hold the button (or M) and talk.</li>
           <li>Watch the people listen to you!</li>
           <li>Open and close the doors yourself.</li>
@@ -214,60 +272,65 @@ body.speaking .map,body.speaking .ctrl,body.speaking .tools>:not(#bAdmin){opacit
       <div class="en" id="sEn">&nbsp;</div>
     </div>
     <div class="map" id="map"><div class="line"></div><div class="train" id="mapTrain"></div></div>
-    <div class="ctrl">
-      <button class="btn" id="bL">◀ Open left<small>←</small></button>
-      <button class="btn closeb" id="bC">▶◀ Close<small>Enter</small></button>
-      <button class="btn" id="bR">Open right ▶<small>→</small></button>
-      <button class="btn power" id="bP">Power ▲<small>Hold ↑</small></button>
-      <button class="btn brake" id="bB">Brake ▼<small>Hold ↓ / Space</small></button>
     </div>
-    <div class="tools">
-      <button class="small" id="bReplay">Listen again (R)</button>
-      <button class="adm" id="bAdmin" title="Admin: hold to skip speaking" aria-label="Admin skip">⚙</button>
-      <span class="spacer"></span>
-      <span class="stat" id="hHelp">Passengers helped: 0</span>
-    </div>
+    <aside class="console">
+      <div class="ctrl">
+        <div class="cpanel meter"><span class="mlabel">SPEED</span><span class="seg" id="cSpeed">0</span><span class="munit">km/h</span></div>
+        <div class="cplate">DOORS</div>
+        <div class="dgrid">
+          <button class="btn" id="bL"><i class="lamp"></i>◀ Open<br>left<small>←</small></button>
+          <button class="btn closeb" id="bC"><i class="lamp"></i>▶◀<br>Close<small>Enter</small></button>
+          <button class="btn" id="bR"><i class="lamp"></i>Open ▶<br>right<small>→</small></button>
+        </div>
+        <div class="cplate">VIEW <small>(V)</small></div>
+        <div class="vsel"><button class="vbtn sel" id="vOut">Outside</button><button class="vbtn" id="vCab">Cab</button></div>
+        <div class="cplate">DRIVE</div>
+        <div class="drive">
+          <div class="mc" id="mc" role="slider" aria-label="Drive lever. Drag up for power, down for brake." aria-valuetext="neutral"><div class="slot"></div><span class="mk" style="top:16%">P</span><span class="mk" style="top:50%">N</span><span class="mk" style="top:84%">B</span><div class="handle"></div></div>
+          <button class="btn power" id="bP">Power ▲<small>Hold ↑</small></button>
+          <button class="btn brake" id="bB">Brake ▼<small>Hold ↓ / Space</small></button>
+        </div>
+      </div>
+      <div class="tools">
+        <button class="small" id="bReplay">Listen again (R)</button>
+        <button class="adm" id="bAdmin" title="Admin: hold to skip speaking" aria-label="Admin skip">⚙</button>
+        <span class="stat" id="hHelp">Passengers helped: 0</span>
+      </div>
+    </aside>
   </div>
 </div>
 <script>
 /* ---------- data ---------- */
 const lineName=L=>L.name||('Line '+L.line);
 const LC={9:'#bdb092',1:'#0052a4',2:'#00a84d',3:'#ef7c1c',4:'#00a5de',5:'#996cac',6:'#cd7c2f',A:'#0090d2',G:'#77c4a3'};
-const tr=k=>k==='A'?{l:'AREX',c:LC.A,en:'the Airport Railroad'}:k==='G'?{l:'GJ',c:LC.G,en:'the Gyeongui-Jungang Line'}:{l:String(k),c:LC[k],en:'Line '+k};
-const S=(en,tts,trs=[])=>({en,tts,tr:trs.map(tr)});
+const tr=k=>k==='A'?{l:'AREX',c:LC.A,en:'the Airport Railroad',ko:'공항철도'}:k==='G'?{l:'GJ',c:LC.G,en:'the Gyeongui-Jungang Line',ko:'경의중앙선'}:{l:String(k),c:LC[k],en:'Line '+k,ko:k+'호선'};
+const S=(en,tts,trs=[],ko)=>({en,tts,tr:trs.map(tr),ko});
+/* every level: Grade 4, 4 stations, English | Korean | English | Korean (odd stations in Korean), segments 1.5x */
+const G4={tier:1,grade:'Grade 4',koAlt:true,segMul:1.5,types:['this','next','yesno','talk','talk']};
 const LEVELS=[
-  {n:2,tier:1,talk:1,line:2,grade:'Grade 4',color:LC[2],
-   stations:[S('Hongik Univ.','Hongik University',['A','G']),S('Sinchon','Sinchon'),S('Ewha Womans Univ.','Ewha Womans University'),S('Ahyeon','Ahyeon'),
-     S('Chungjeongno','Chungjeongno',[5]),S('City Hall','City Hall',[1]),S('Euljiro 1-ga','Euljiro il-ga'),S('Euljiro 3-ga','Euljiro sam-ga',[3])],
-   types:['this','next','yesno','talk','talk'],thanks:'Thank you!'},
-  {n:3,tier:2,talk:2,line:3,grade:'Grade 5',color:LC[3],
-   stations:[S('Gyeongbokgung','Gyeongbokgung'),S('Anguk','Anguk'),S('Jongno 3-ga','Jongno sam-ga',[1,5]),S('Euljiro 3-ga','Euljiro sam-ga',[2]),
-     S('Chungmuro','Chungmuro',[4]),S('Dongguk Univ.','Dongguk University'),S('Yaksu','Yaksu',[6]),S('Geumho','Geumho')],
-   dests:[{en:'Gwanghwamun',at:2,line:'Line 5'},{en:'City Hall',at:3,line:'Line 2'},{en:'Myeong-dong',at:4,line:'Line 4'},{en:'Itaewon',at:6,line:'Line 6'}],
-   types:['howmany','getto','next','talk','talk'],thanks:'Thank you so much!'},
-  {n:4,tier:3,talk:3,line:4,grade:'Grade 6',color:LC[4],
-   stations:[S('Seoul Station','Seoul Station',[1,'A','G']),S('Hoehyeon','Hoehyeon'),S('Myeong-dong','Myeong-dong'),S('Chungmuro','Chungmuro',[3]),
-     S('Dongdaemun History & Culture Park','Dongdaemun History and Culture Park',[2,5]),S('Dongdaemun','Dongdaemun',[1]),S('Hyehwa','Hyehwa'),S('Hansung Univ.','Hansung University')],
-   places:[{en:'Namdaemun Market',at:1},{en:'N Seoul Tower',at:2},{en:'Dongdaemun Design Plaza',at:4},{en:'Daehangno',at:6}],
-   types:['did','closer','going','talk','talk'],thanks:'Thanks a lot!'},
+  {...G4,n:1,talk:'out',line:1,color:LC[1],outdoor:true,bridgeName:'Hangang Railway Bridge',bridgeSay:'We are crossing the Han River!',
+   stations:[S('Seoul Station','Seoul Station',[4,'A','G'],'서울'),S('Namyeong','Namyeong',[],'남영'),S('Yongsan','Yongsan',['G'],'용산'),Object.assign(S('Noryangjin','Noryangjin',[9],'노량진'),{bridge:true,seg:190})],
+   thanks:'Thank you!'},
+  {...G4,n:2,talk:1,line:2,color:LC[2],
+   stations:[S('Ahyeon','Ahyeon',[],'아현'),S('Chungjeongno','Chungjeongno',[5],'충정로'),Object.assign(S('City Hall','City Hall',[1],'시청'),{crowd:true}),S('Euljiro 1-ga','Euljiro il-ga',[],'을지로입구')],
+   thanks:'Thank you!'},
+  {...G4,n:3,talk:1,line:3,color:LC[3],
+   stations:[S('Gyeongbokgung','Gyeongbokgung',[],'경복궁'),S('Anguk','Anguk',[],'안국'),S('Jongno 3-ga','Jongno sam-ga',[1,5],'종로3가'),S('Euljiro 3-ga','Euljiro sam-ga',[2],'을지로3가')],
+   thanks:'Thank you so much!'},
+  {...G4,n:4,talk:1,line:4,color:LC[4],
+   stations:[S('Seoul Station','Seoul Station',[1,'A','G'],'서울'),S('Hoehyeon','Hoehyeon',[],'회현'),S('Myeong-dong','Myeong-dong',[],'명동'),S('Chungmuro','Chungmuro',[3],'충무로')],
+   thanks:'Thanks a lot!'},
+  /* Airport Cargo Terminal is skipped so the line ends at the airport */
+  {...G4,n:5,talk:'air',line:'A',name:'Airport Railroad',color:LC.A,outdoor:true,planes:true,bridgeName:'Yeongjong Bridge',bridgeSay:'We are crossing the sea!',
+   stations:[S('Cheongna Int’l City','Cheongna International City',[],'청라국제도시'),Object.assign(S('Yeongjong','Yeongjong',[],'영종'),{bridge:true,seg:200}),S('Unseo','Unseo',[],'운서'),S('Incheon Airport T1','Incheon Airport Terminal 1',[],'인천공항1터미널')],
+   thanks:'Thank you! Have a nice day!'},
 ];
-LEVELS.unshift({n:1,tier:1,talk:'out',line:1,grade:'Grade 4',color:LC[1],outdoor:true,bridgeName:'Hangang Railway Bridge',bridgeSay:'We are crossing the Han River!',
-   stations:[S('Seoul Station','Seoul Station',[4,'A','G']),S('Namyeong','Namyeong'),S('Yongsan','Yongsan',['G']),Object.assign(S('Noryangjin','Noryangjin',[9]),{bridge:true,seg:190}),
-     S('Daebang','Daebang'),S('Singil','Singil',[5]),S('Yeongdeungpo','Yeongdeungpo'),S('Sindorim','Sindorim',[2])],
-   dests:[{en:'Gimpo Airport',at:3,line:'Line 9'},{en:'Yeouido',at:5,line:'Line 5'},{en:'Gangnam',at:7,line:'Line 2'}],
-   places:[{en:'Yongsan Electronics Market',at:2},{en:'Noryangjin Fish Market',at:3},{en:'Times Square',at:6}],
-   types:['this','next','yesno','talk','talk'],thanks:'Thank you!'});
-LEVELS.push({n:5,tier:3,talk:'air',line:'A',name:'Airport Railroad',grade:'Grade 6',color:LC.A,outdoor:true,planes:true,bridgeName:'Yeongjong Bridge',bridgeSay:'We are crossing the sea!',
-   stations:[S('Gyeyang','Gyeyang'),S('Geomam','Geomam'),S('Cheongna Int’l City','Cheongna International City'),Object.assign(S('Yeongjong','Yeongjong'),{bridge:true,seg:200}),
-     S('Unseo','Unseo'),S('Airport Cargo Terminal','Airport Cargo Terminal'),S('Incheon Airport T1','Incheon Airport Terminal 1'),S('Incheon Airport T2','Incheon Airport Terminal 2')],
-   types:['this','did','closer','talk','talk','talk'],thanks:'Thank you! Have a nice day!'});
-LEVELS.find(l=>l.line===2).stations.find(s=>s.en==='City Hall').crowd=true;
 const NUMW=['One stop.','Two stops.','Three stops.','Four stops.','Five stops.'];
 
 let LV=LEVELS[0],ST=LV.stations,LAST=ST.length-1;
 const SEG=110;
 const G={keys:{up:false,down:false},moved:false,state:'title',token:0,i:0,camZ:-3,v:0,marker:0,braking:false,emerg:false,
-  platforms:[],side:[],stars:0,perfect:0,helped:0,quizCount:0,doorOpen:null,last:null,quiz:null,used:new Set(),sel:0};
+  platforms:[],side:[],stars:0,perfect:0,helped:0,quizCount:0,doorOpen:null,last:null,used:new Set(),sel:0};
 const $=id=>document.getElementById(id);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
@@ -287,6 +350,10 @@ function tone(f,start,dur,type='sine',vol=.2){const a=ac();if(!a)return;const t=
   o.connect(g).connect(a.destination);o.start(t);o.stop(t+dur+.05);}
 const chime=()=>{tone(659,0,.5);tone(523,.28,.6);};
 const good=()=>{tone(880,0,.12,'square',.08);tone(1175,.11,.15,'square',.08);};
+const fanfare=()=>{[784,988,1175,1568].forEach((f,i)=>tone(f,.25+i*.1,i===3?.3:.1,'square',.07));};
+const PRAISE_AT=.9;let praiseT;
+function praise(ko,top=false){const m=$('praiseMsg');m.textContent=ko?'잘했어요!':'Great job!';m.classList.toggle('ko',ko);
+  $('praise').classList.toggle('top',top);$('praise').hidden=false;fanfare();clearTimeout(praiseT);praiseT=setTimeout(()=>$('praise').hidden=true,1500);}
 const bad=()=>tone(150,0,.3,'square',.1);
 let NB=null;
 function noiseBuf(){if(NB)return NB;const a=AC;NB=a.createBuffer(1,a.sampleRate,a.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;return NB;}
@@ -315,11 +382,11 @@ function engine(){const a=ac();if(!a||ENG)return ENG;
 function clack(r){if(onBridge()){tone(330,0,.07,'square',.03*r+.01);tone(330,.13,.07,'square',.03*r+.01);}burst(0,.06,1700,'bandpass',.22*r+.02,2);tone(85,0,.09,'sine',.18*r+.02);
   burst(.13,.06,1700,'bandpass',.18*r+.02,2);tone(85,.13,.09,'sine',.15*r+.02);}
 function updateSound(dt){
-  if(ENG&&AC&&G.listening){const t=AC.currentTime;ENG.ng.gain.setTargetAtTime(0,t,.05);ENG.og.gain.setTargetAtTime(0,t,.05);ENG.sg.gain.setTargetAtTime(0,t,.05);return;}
+  if(ENG&&AC&&(G.listening||G.state==='announce')){const t=AC.currentTime;ENG.ng.gain.setTargetAtTime(0,t,.05);ENG.og.gain.setTargetAtTime(0,t,.05);ENG.sg.gain.setTargetAtTime(0,t,.05);return;}
   if(!ENG||!AC)return;const t=AC.currentTime,run=G.state==='run',v=run?G.v:0,r=v/12;
   const front=G.camZ+3,inStation=G.platforms.some(pl=>front>pl.start-4&&front-TRAIN_LEN<pl.end+4);
   const room=inStation?.55:1;
-  const idle=(G.state==='title'||G.state==='end')?0:.012;
+  const idle=(G.state==='title'||G.state==='end'||G.state==='punch'||G.state==='story')?0:.012;
   ENG.ng.gain.setTargetAtTime(idle+r*.42*room,t,.25);
   ENG.lp.frequency.setTargetAtTime(180+r*650,t,.25);
   const drive=G.keys.up&&run?1:G.braking?.8:.3;
@@ -333,37 +400,28 @@ let voices=[];
 function loadVoices(){try{voices=speechSynthesis.getVoices();}catch(e){}}
 loadVoices();try{speechSynthesis.onvoiceschanged=loadVoices;}catch(e){}
 function voiceFor(who){
+  if(!voices.length)loadVoices();
   const pref=who==='ann'?['Samantha','Google US English','Microsoft Aria Online (Natural) - English (United States)','Alex']
                         :['Daniel','Karen','Moira','Google UK English Female','Google UK English Male'];
-  return voices.find(v=>pref.includes(v.name))||voices.find(v=>v.lang==='en-US')||voices.find(v=>/^en/.test(v.lang));
+  return voices.find(v=>pref.includes(v.name))||voices.find(v=>/^en[-_]US$/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang));
 }
+function koVoice(){if(!voices.length)loadVoices();return voices.find(x=>/^ko/i.test(x.lang));}
 function toTTS(t){[...ST].sort((a,b)=>b.en.length-a.en.length).forEach(s=>{t=t.split(s.en).join(s.tts);});return t.replace(/&/g,'and');}
+/* one utterance, one voice: Korean text -> Korean voice, everything else -> English voice.
+   (Switching voices inside one sentence made browsers read English with the Korean voice.) */
 function say(text,who){
+  const ko=hasKo(text);
   return new Promise(res=>{let done=false;const fin=()=>{if(!done){done=true;res();}};
-    try{speechSynthesis.cancel();const v=voiceFor(who),ko=voices.find(x=>/^ko/i.test(x.lang));
-      const parts=toTTS(text).split(/(Seungwoo)/).filter(p=>p.trim());
-      parts.forEach((p,k)=>{const name=p==='Seungwoo';const u=new SpeechSynthesisUtterance(name?(ko?'승우':'Sseung-woo'):p);
-        if(name&&ko){u.voice=ko;u.lang=ko.lang;u.rate=.9;}
-        else{if(v)u.voice=v;u.lang=v?v.lang:'en-US';u.rate=who==='ann'?.85:.9;u.pitch=who==='ann'?1:1.15;}
-        if(k===parts.length-1){u.onend=fin;u.onerror=fin;}speechSynthesis.speak(u);});}catch(e){}
-    setTimeout(fin,1500+text.length*95);});
+    try{speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(ko?text:toTTS(text).replace(/Seungwoo/g,'Seung-woo'));
+      if(ko){const kv=koVoice();if(kv)u.voice=kv;u.lang='ko-KR';u.rate=1;}
+      else{const v=voiceFor(who);if(v)u.voice=v;u.lang=v?v.lang.replace('_','-'):'en-US';u.rate=who==='ann'?.85:.9;u.pitch=who==='ann'?1:1.15;}
+      u.onend=fin;u.onerror=fin;speechSynthesis.speak(u);}catch(e){}
+    setTimeout(fin,1500+text.length*(ko?160:95));});
 }
 function speak(en,who='ann'){G.last={en,who};$('sWho').textContent=who==='ann'?'Announcement':'Passenger';$('sEn').textContent=en;return say(en,who);}
-let toastT;
-function toast(t,ms=1300){const T=$('toast');T.textContent=t;T.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>T.hidden=true,ms);}
-
-/* ---------- announcements by level ---------- */
-const trText=s=>s.tr.map(t=>t.en).join(' and ');
-function annNext(s){
-  if(LV.tier===1)return `The next stop is ${s.en}.`+(s.tr.length?` You can transfer to ${trText(s)}.`:'');
-  if(LV.tier===2)return `The next stop is ${s.en}.`+(s.tr.length?` You can transfer to ${trText(s)}.`:'')+' Please get ready to get off.';
-  return `We will soon arrive at ${s.en}.`+(s.tr.length?` Passengers going to ${trText(s)}, please transfer here.`:'');
-}
-function annThis(s,side){
-  if(LV.tier===1)return `This stop is ${s.en}. The doors are on your ${side}.`;
-  if(LV.tier===2)return `This stop is ${s.en}. The doors are on your ${side}. Please mind the gap.`;
-  return `This station is ${s.en}. The doors will open on your ${side}. Please watch your step.`;
-}
+let toastT,lastKmh='';
+function toast(t,ms=1300,top=false){const T=$('toast');T.textContent=t;T.classList.toggle('top',top);T.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>T.hidden=true,ms);}
 
 /* ---------- map ---------- */
 const nodeX=k=>4+k/LAST*92;
@@ -383,19 +441,17 @@ function buildLevels(){
     b.onclick=()=>{G.sel=k;buildLevels();};box.appendChild(b);});
 }
 function setLevel(k){LV=LEVELS[k];ST=LV.stations;LAST=ST.length-1;
-  G.markers=ST.map(()=>0);for(let i=1;i<ST.length;i++)G.markers[i]=G.markers[i-1]+(ST[i].seg||SEG);
+  G.markers=ST.map(()=>0);for(let i=1;i<ST.length;i++)G.markers[i]=G.markers[i-1]+Math.round((ST[i].seg||SEG)*(LV.segMul||1));
   const bi=ST.findIndex(x=>x.bridge);LV.bridge=bi>0?[G.markers[bi-1]+18,G.markers[bi]-42]:null;document.documentElement.style.setProperty('--line',LV.color);buildMap();mapI=-1;}
 
-const PAX=[
-"................",".....hhhhhh.....","....hhhhhhhh....","....hsssssshh...","....sesssses....","....ssssssss....",
-".....ssmmss.....","......ssss......","....tttttttt....","...tttttttttt...","..tttttttttttt..","..ss.tttttt.ss..",
-".....tttttt.....",".....pp..pp.....",".....pp..pp.....",".....kk..kk....."];
 /* ---------- canvas ---------- */
 const cv=$('cv'),ctx=cv.getContext('2d');
 const W=480,H=270,DASH=225;
 const CX=240,CY=63,FL=165,NEAR=.4,FAR=90,TW=4.2,FY=1.5,CEIL=-5.5,WIRE=-2.75;
 const TL=6,TGAP=.25,CARS=3,TWID=1.3,TTOP=-1.7,TBOT=1.05,TRAIN_LEN=CARS*TL+(CARS-1)*TGAP;
 let VX=-3.2,VY=-3.4,VZ=0,CAMBACK=6;
+/* chase camera (CVX/CVY) blended toward the driver cab view by CABE (0 = outside, 1 = cab) */
+let CVX=-3.2,CVY=-3.4,CAB=0,CABE=0;const CAB_X=-.35,CAB_Y=-.6;
 function onBridge(){const b=LV.bridge;if(!b||!G.markers)return false;const f=G.camZ+3;return f>b[0]+2&&f-TRAIN_LEN<b[1];}
 const P=(x,y,z)=>[CX+(x-VX)*FL/z,CY+(y-VY)*FL/z];
 function quad(pts,col,edge){ctx.fillStyle=col;ctx.beginPath();pts.forEach((p,k)=>{const q=P(p[0],p[1],p[2]);k?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]);});ctx.closePath();ctx.fill();
@@ -410,15 +466,34 @@ function camTarget(){
 }
 /* seeded random so each platform keeps the same decor */
 function srand(seed){let s=((seed*9301+49297)%233280+233280)%233280;return()=>{s=((s*9301+49297)%233280+233280)%233280;return s/233280;};}
+/* simple big-head pixel people: one face, five hair styles (bun, cap, curly, quiff, long) */
+const HEAD=["................","................","................","................",
+  "...sssssssssS...","...sssssssssS...","...sssssssssS...","...ssesssesSS...","...ssesssesSS...","...sssssssssS...",
+  "...sssssssssS...","....sssssssS....",".....ssssss.....","......ssss......","......SSSS......","....tttttttt...."];
+const SIDE=(a,n)=>Array(n).fill(a);
+const HAIRS={
+  bun:  ["..........hhh...","..........hhh...","...hhhhhhhhhh...","...hhhhhhhhhh...","...h............"],
+  cap:  ["................","....wccccccw....","...cccccccccw...","ccccccccccccc...","...h............"],
+  curly:["................","....hhhhhhhh....","..hhhhhhhhhhhh..",".hhhhhhhhhhhhhh.",...SIDE(".hh..........hh.",9),".hhh........hhh."],
+  quiff:["................","....hhhhhhh.....","...hhhhhhhhhh...","...hhhhhhhhhh...","...h........h..."],
+  long: ["................","....hhhhhhhh....","...hhhhhhhhhh...","..hhhhhhhhhhhh..","..hhhh......hh..",...SIDE("..h..........h..",11)],
+};
+const HSTYLE=Object.keys(HAIRS);
+const HAIRC=['#2b1d14','#5a3a1e','#8a5a1e','#1a1a1a','#a8452a','#d9b24a'],SKINC=['#f7c49a','#f2a96e','#e8b08a','#c98a5a'],
+  TOPC=['#e8433f','#3b7dd8','#f2a03d','#7a5cc7','#2fae7a','#e9e9e3','#2f3a44','#d65d8f'],BOTC=['#3a4250','#24304a','#5a4a3a','#7d858b'];
+/* 16x16 head grid with the chosen hair laid on top */
+function headRows(style){const rows=HEAD.map(r=>r.split(''));
+  HAIRS[style].forEach((r,y)=>[...r].forEach((ch,x)=>{if(ch!=='.')rows[y][x]=ch;}));return rows;}
+function headCols(style,n){const s=SKINC[n%SKINC.length];
+  return{h:HAIRC[n%HAIRC.length],s,S:shade(s,-28),e:'#1b1b1b',c:TOPC[(n+3)%TOPC.length],w:'#f4f4ee',t:TOPC[n%TOPC.length]};}
 const SPR=[];
 (function makeSprites(){
-  const HAIR=['#2b1d14','#5a3a1e','#d9b24a','#1a1a1a','#a8452a','#6b6b6b'],SKIN=['#f2c9a0','#d9a477','#a8714a'],
-    TOP=['#e8433f','#3b7dd8','#f2a03d','#7a5cc7','#2fae7a','#e9e9e3','#2f3a44','#d65d8f'],BOT=['#3a4250','#24304a','#5a4a3a','#7d858b'];
-  const PERSON=["..hhhh..",".hhhhhh.",".hssssh.",".sesses.","..ssss..","...ss...",".tttttt.","tttttttt","tttttttt","s.tttt.s","..tttt..","..pppp..","..p..p..","..p..p..","..p..p..","..k..k.."];
-  for(let n=0;n<10;n++){const c=document.createElement('canvas');c.width=8;c.height=16;const x=c.getContext('2d');
-    const col={h:HAIR[n%6],s:SKIN[n%3],e:'#222',t:TOP[n%8],p:BOT[n%4],k:'#222',b:'#8a5a2b'};
-    const rows=PERSON.map(r=>r.split(''));
-    if(n%3===0){rows[7][7]='b';rows[8][7]='b';rows[9][7]='b';}
+  /* body under a 12-wide crop of the head (cols 2-13, rows 0-13) */
+  const BODY=["..tttttttt..",".tttttttttt.",".tttttttttt.",".s.tttttt.s.","...tttttt...","...pp..pp...","...pp..pp...","...pp..pp...","...kk..kk..."];
+  for(let n=0;n<15;n++){const style=HSTYLE[n%5],c=document.createElement('canvas');c.width=12;c.height=23;const x=c.getContext('2d');
+    const col={...headCols(style,n),p:BOTC[n%4],k:'#222',b:'#8a5a2b'};
+    const rows=headRows(style).slice(0,14).map(r=>r.slice(2,14)).concat(BODY.map(r=>r.split('')));
+    if(n%3===0){rows[15][11]='b';rows[16][11]='b';rows[17][11]='b';}
     rows.forEach((r,y)=>r.forEach((ch,xx)=>{if(col[ch]){x.fillStyle=col[ch];x.fillRect(xx,y,1,1);}}));
     SPR.push(c);}
 })();
@@ -438,7 +513,7 @@ function drawPeople(pl){
   [...d.people].sort((a,b)=>b.z-a.z).forEach(p=>{if(p.hidden)return;const z=p.z-VZ;if(z<6||z>FAR)return;const h=px(z)*1.65;const q=P(p.x,.5,z);
     const bob=p.path&&p.path.length&&!(p.delay>0)?Math.round(Math.abs(Math.sin(p.walk*9))*h*.05):0;
     ctx.fillStyle='rgba(0,0,0,.18)';ctx.fillRect(Math.round(q[0]-h*.22),Math.round(q[1]-h*.04),Math.round(h*.44),Math.max(1,Math.round(h*.06)));
-    ctx.drawImage(SPR[p.spr],Math.round(q[0]-h/4),Math.round(q[1]-h-bob),Math.round(h/2),Math.round(h));});
+    const w=h*12/23;ctx.drawImage(SPR[p.spr],Math.round(q[0]-w/2),Math.round(q[1]-h-bob),Math.round(w),Math.round(h));});
 }
 /* passengers getting off and on */
 function doorZs(){const front=G.camZ+3,a=[];for(let k=0;k<CARS;k++){const zr=front-k*(TL+TGAP)-TL;[1.35,2.85,4.35].forEach(p=>a.push(zr+p+.275));}return a;}
@@ -448,7 +523,7 @@ function startExchange(hold){
   const nearDoor=z=>doors.reduce((b,x)=>Math.abs(x-z)<Math.abs(b-z)?x:b,doors[0]);
   const out=4+Math.floor(Math.random()*3);
   for(let k=0;k<out;k++){const dz=rnd(doors);
-    d.people.push({x:s*1.15,z:dz,spr:Math.floor(Math.random()*SPR.length),walk:0,delay:hold?1e9:.2+k*.25,held:!!hold,hidden:true,
+    d.people.push({x:s*1.15,z:dz,spr:Math.floor(Math.random()*SPR.length),walk:0,out:true,delay:hold?1e9:.2+k*.25,held:!!hold,hidden:true,
       path:[[s*1.9,dz+(Math.random()-.5)*.6],[s*(3.0+Math.random()*.9),dz+(Math.random()-.5)*5]]});}
   const cand=shuffle(d.people.filter(p=>!p.path&&p.z<front-.5&&p.z>front-TRAIN_LEN+.5));
   cand.slice(0,pl.crowd?14:5).forEach((p,k)=>{const dz=nearDoor(p.z);p.board=true;p.walk=0;
@@ -460,8 +535,14 @@ const curPl=()=>G.platforms.find(p=>p.marker===G.marker);
 function releaseBoarders(){const pl=curPl();if(!pl||!pl.deco)return;let a=0,b=0;
   pl.deco.people.forEach(p=>{if(p.held){p.held=false;p.delay=.9+a++*.25;}});
   pl.deco.people.forEach(p=>{if(p.pending){p.path=(p.path||[]).concat(p.pending);p.pending=null;p.walk=0;p.delay=.1+b*.1;p.wait=1.4+a*.25+b++*.35;}});}
+/* waiting people still on the platform (not boarding, not getting off) */
+const waiters=pl=>pl.deco.people.filter(p=>!p.board&&!p.held&&!p.pending&&!p.hidden);
+/* closing announcement shown: everyone crowds toward the platform edge */
+function leanIn(){const pl=curPl();if(!pl||!pl.deco)return;const s=pl.side;
+  waiters(pl).filter(p=>!p.out).forEach(p=>{p.idle=true;p.walk=0;p.delay=Math.random()*.4;p.path=[[s*(1.95+Math.random()*.55),p.z+(Math.random()-.5)*.6]];});}
+/* closing announcement passed: everyone steps back to the wall */
 function stepBack(){const pl=curPl();if(!pl||!pl.deco)return;const s=pl.side;
-  pl.deco.people.forEach(p=>{if(!(p.path&&p.path.length)&&!p.pending&&Math.abs(p.x)<2.8){p.walk=0;p.delay=Math.random()*.3;p.path=[[s*(3.1+Math.random()*.7),p.z+(Math.random()-.5)]];}});}
+  waiters(pl).forEach(p=>{p.idle=true;p.walk=0;p.delay=Math.random()*.25;p.path=[[s*(3.55+Math.random()*.45),p.z+(Math.random()-.5)*.6]];});}
 function stopBoarding(){const pl=G.platforms.find(p=>p.marker===G.marker);if(!pl||!pl.deco)return;
   pl.deco.people.forEach(p=>{if(p.board&&p.delay>0){p.board=false;p.path=null;p.delay=0;}});
 }
@@ -473,7 +554,8 @@ function updatePeople(dt){
       else{p.x+=dx/L*st;p.z+=dz/L*st;}});
     d.people=d.people.filter(p=>!p.gone);});
 }
-const exchanging=()=>G.platforms.some(pl=>pl.deco&&pl.deco.people.some(p=>p.path&&p.path.length));
+/* people getting on or off (stepping forward/back on the platform does not count) */
+const exchanging=()=>G.platforms.some(pl=>pl.deco&&pl.deco.people.some(p=>p.path&&p.path.length&&!p.idle));
 function platformBase(pl){
   const zs=Math.max(NEAR,pl.start-VZ),ze=Math.min(FAR,pl.end-VZ);if(ze<=zs)return;
   const s=pl.side,E=s*1.55,Wx=s*TW,d=deco(pl);
@@ -670,7 +752,8 @@ function drawOutdoorObjects(front){
   const br=LV.bridge;
   if(br){const SP=10,TOP=k=>-1.9-1.1*Math.sin(Math.PI*k/5);
     for(let w0=br[0];w0<br[1];w0+=SP){
-      items.push({z:w0-VZ+.01,fr:false,f:z=>{if(z<NEAR)return;quad([[-1.5,FY+.1,z],[1.5,FY+.1,z],[1.5,FY+2.2,z],[-1.5,FY+2.2,z]],'#a9a49a','#7d786f');
+      /* piers stand under the deck: only visible when the camera is off to the side, never from the cab */
+      if(Math.abs(VX)>1.7)items.push({z:w0-VZ+.01,fr:false,f:z=>{if(z<NEAR)return;quad([[-1.5,FY+.1,z],[1.5,FY+.1,z],[1.5,FY+2.2,z],[-1.5,FY+2.2,z]],'#a9a49a','#7d786f');
         const sx=(VX>=0?1:-1)*1.5;if(z+.8>NEAR)quad([[sx,FY+.1,z],[sx,FY+2.2,z],[sx,FY+2.2,z+.8],[sx,FY+.1,z+.8]],'#8f8a80');}});
       [-1,1].forEach(s=>{const x=s*1.85;items.push({z:w0-VZ,fr:s===camSide,f:z=>{
         for(let k=0;k<5;k++){const za=z+k*SP/5,zb=za+SP/5;if(zb<NEAR)continue;const A=Math.max(NEAR,za),q=Math.max(1,px(Math.max(A,1))*.09);
@@ -681,8 +764,51 @@ function drawOutdoorObjects(front){
   items.filter(i=>i.fr===front&&i.z>NEAR&&i.z<FAR).sort((a,b)=>b.z-a.z).forEach(i=>i.f(i.z));
 }
 
+/* hard braking at speed throws sparks off the wheels */
+const SPARKS=[],SPARK_V=3;/* 18 km/h */
+function updateSparks(dt){
+  if(G.braking&&G.v>SPARK_V){
+    const s=VX>=0?1:-1,front=G.camZ+3,side=Math.abs(VX)>TWID+.05,n=Math.round(G.v*dt*28+Math.random());
+    for(let i=0;i<n;i++){const k=Math.floor(Math.random()*CARS),p=[.6,1.4,4.6,5.4][Math.floor(Math.random()*4)],wz=front-k*(TL+TGAP)-TL+p;
+      if(wz-VZ<5)continue;const x=side?s*TWID*.96:(Math.random()<.5?-.75:.75),out=side?s:Math.sign(x);
+      SPARKS.push({x,y:FY-.08,z:wz,vx:out*(.6+Math.random()*2.4),vy:-(1.4+Math.random()*3.2),vz:G.v*(.15+Math.random()*.4),life:0,max:.3+Math.random()*.45});}}
+  for(let i=SPARKS.length-1;i>=0;i--){const q=SPARKS[i];q.life+=dt;if(q.life>q.max){SPARKS.splice(i,1);continue;}
+    q.x+=q.vx*dt;q.y+=q.vy*dt;q.z+=q.vz*dt;q.vy+=9*dt;if(q.y>FY){q.y=FY;q.vy*=-.35;}}
+}
+function drawSparks(){SPARKS.forEach(q=>{const z=q.z-VZ,tz=z-(q.vz-G.v)*.09;if(z<NEAR||tz<NEAR)return;
+  const a=P(q.x,q.y,z),b=P(q.x-q.vx*.09,q.y-q.vy*.09,tz),t=q.life/q.max;
+  ctx.strokeStyle=t<.3?'#fffbe0':t<.65?'#ffd23f':'#ff7a1a';ctx.lineWidth=Math.max(2,Math.round(px(z)*.08));
+  ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();});}
+/* wind streaks rush past while driving; more and longer the faster we go */
+const WIND=[],WIND_V=1.5;
+function updateWind(dt){
+  const v=G.state==='run'?G.v:0;
+  if(v>WIND_V){const n=Math.random()<v*dt*2.4?1:0;
+    for(let i=0;i<n;i++){const s=Math.random()<.5?-1:1;
+      WIND.push({x:s*(1.8+Math.random()*2),y:-2.6+Math.random()*3.4,z:VZ+25+Math.random()*35});}}
+  else WIND.length=0;
+  for(let i=WIND.length-1;i>=0;i--)if(WIND[i].z-VZ<NEAR+.6)WIND.splice(i,1);
+}
+function drawWind(){const v=G.state==='run'?G.v:0;if(!WIND.length)return;
+  const len=.6+v*.28,al=Math.min(.38,v/12*.4);ctx.save();
+  WIND.forEach(w=>{const z=w.z-VZ,z2=z+len;if(z<NEAR)return;const a=P(w.x,w.y,z),b=P(w.x,w.y,z2);
+    ctx.strokeStyle=`rgba(255,255,255,${(al*Math.min(1,(60-z)/20)).toFixed(3)})`;ctx.lineWidth=Math.max(1,Math.min(3,Math.round(px(z)*.02)));
+    ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();});
+  ctx.restore();}
+/* driver cab frame seen from the driver's seat */
+function drawCab(a){if(a<=0)return;ctx.save();ctx.globalAlpha=a;
+  ctx.fillStyle='#1a2026';ctx.fillRect(0,0,W,16);
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(46,0);ctx.lineTo(30,DASH);ctx.lineTo(0,DASH);ctx.fill();
+  ctx.beginPath();ctx.moveTo(W,0);ctx.lineTo(W-46,0);ctx.lineTo(W-30,DASH);ctx.lineTo(W,DASH);ctx.fill();
+  ctx.strokeStyle='#3d4852';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(46,16);ctx.lineTo(31,DASH-22);ctx.moveTo(W-46,16);ctx.lineTo(W-31,DASH-22);ctx.moveTo(44,16);ctx.lineTo(W-44,16);ctx.stroke();
+  ctx.fillStyle='#2a333b';ctx.fillRect(0,DASH-22,W,22);ctx.fillStyle='#3f4a54';ctx.fillRect(0,DASH-22,W,3);
+  ctx.fillStyle='#14191d';ctx.fillRect(196,DASH-16,88,12);ctx.fillStyle='#ff3b2f';ctx.font='8px "Press Start 2P", monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(LV.line?String(LV.line).padStart(2,'0')+'07':'1907',240,DASH-10);
+  const lv=G.keys.up?-6:G.keys.down?6:0;ctx.fillStyle='#0b0e11';ctx.fillRect(84,DASH-18,8,14);ctx.fillStyle='#c7ccd4';ctx.fillRect(74,DASH-14+lv,28,6);
+  ctx.restore();}
 function draw(){
-  VZ=G.camZ+3-TRAIN_LEN-CAMBACK;ctx.imageSmoothingEnabled=false;
+  if(G.state==='story'){drawStory();return;}
+  {const zc=G.camZ+3-TRAIN_LEN-CAMBACK;VZ=zc+(G.camZ+3-.2-zc)*CABE;}ctx.imageSmoothingEnabled=false;
   if(LV.outdoor)drawOutdoorBg();else{
   ctx.fillStyle='#3a3f4a';ctx.fillRect(0,0,W,H);
   quad([[-TW,CEIL,NEAR],[TW,CEIL,NEAR],[TW,CEIL,FAR],[-TW,CEIL,FAR]],'#2a2e37');
@@ -700,19 +826,27 @@ function draw(){
   line3([0,WIRE,NEAR+1],[0,WIRE,FAR],'#1c1f24',1);
   if(LV.outdoor)drawOutdoorObjects(false);else{
   const fog=ctx.createRadialGradient(CX,CY,0,CX,CY,225);fog.addColorStop(0,'rgba(10,12,16,.85)');fog.addColorStop(.55,'rgba(10,12,16,.35)');fog.addColorStop(1,'rgba(10,12,16,0)');
-  ctx.fillStyle=fog;ctx.fillRect(0,0,W,H);}
+  ctx.fillStyle=fog;ctx.fillRect(0,0,W,H);
+  /* fluorescent tubes on both tunnel walls every 24 u, drawn over the fog so they glow; fainter far away */
+  for(let w=Math.ceil((VZ+NEAR)/24)*24;w<VZ+FAR;w+=24){const z=w-VZ;if(z<1.5)continue;const a=Math.max(.25,1-z/FAR);
+    ctx.globalAlpha=a;[-1,1].forEach(s=>{const x=s*TW*.985;
+      quad([[x,-3.9,z-.6],[x,-2.3,z-.6],[x,-2.3,z+3.6],[x,-3.9,z+3.6]],'rgba(190,230,255,.16)');
+      quad([[x,-3.3,z],[x,-2.9,z],[x,-2.9,z+3],[x,-3.3,z+3]],'#f2fbff');});}
+  ctx.globalAlpha=1;}
   const camSide=VX>=0?1:-1;
   G.platforms.forEach(platformBase);
   G.platforms.forEach(pl=>{if(pl.side!==camSide){drawPeople(pl);platformPSD(pl);}});
-  drawTrain();
+  if(CABE<.3){drawTrain();drawSparks();}
   if(LV.outdoor)drawOutdoorObjects(true);
   G.platforms.forEach(pl=>{if(pl.side===camSide){platformPSD(pl);drawPeople(pl);}});
+  drawWind();drawCab(Math.max(0,(CABE-.3)/.7));
   // dashboard (drawn in the original 320x180 layout, scaled up)
   ctx.save();ctx.scale(1.5,1.5);
   ctx.fillStyle='#2f3a44';ctx.fillRect(0,150,320,30);ctx.fillStyle=LV.color;ctx.fillRect(0,150,320,2);
   ctx.fillStyle='#14191d';ctx.fillRect(14,157,70,17);
   ctx.fillStyle='#7fe0a8';ctx.font='8px "Press Start 2P", monospace';ctx.textAlign='left';ctx.textBaseline='middle';
   ctx.fillText(String(Math.round(G.v*6)).padStart(2,' ')+' km/h',19,166);
+  const kmh=String(Math.round(G.v*6));if(kmh!==lastKmh){lastKmh=kmh;$('cSpeed').textContent=kmh;}
   ctx.fillStyle=G.keys.up&&G.state==='run'?'#00a84d':'#14191d';ctx.fillRect(110,157,40,17);
   ctx.fillStyle=G.keys.up&&G.state==='run'?'#fff':'#5a666e';ctx.textAlign='center';ctx.fillText('PWR',130,166);
   ctx.fillStyle=G.braking?'#e8433f':'#14191d';ctx.fillRect(160,157,40,17);ctx.fillStyle=G.braking?'#fff':'#5a666e';ctx.fillText('BRK',180,166);
@@ -729,7 +863,6 @@ function hud(){
   $('doorPop').hidden=G.state!=='doors';$('closePop').hidden=G.state!=='boarding';
   document.body.classList.toggle('speaking',G.state==='announce');
   if(!$('sayCard').hidden)drawRadio(G.listening,performance.now());
-  $('hNext').textContent='';
   if(ST[G.i]){const run=G.state==='run'||!!(G.sayTask&&G.sayTask.kind==='next');$('sgLn').textContent=LV.name?'AREX':String(LV.line);
     $('sgTag').textContent=run?'NEXT STOP':'THIS STOP';$('sgName').textContent=ST[G.i].en;
     $('sgPrev').textContent=G.i>0?'◀ '+ST[G.i-1].en:'';$('sgNext').textContent=G.i<LAST?ST[G.i+1].en+' ▶':'';}
@@ -746,23 +879,26 @@ function hud(){
 async function startGame(k){
   ac();engine();G.token++;const tk=G.token;
   setLevel(k);G.sel=k;
-  Object.assign(G,{i:0,camZ:-3,v:0,marker:0,braking:false,emerg:false,moved:false,stars:0,perfect:0,helped:0,quizCount:0,doorOpen:null,quiz:null,used:new Set(),bridgeShown:false,sayOk:0,sayCount:0,kidAnnounced:false,sayTask:null,listening:false});
+  Object.assign(G,{i:0,camZ:-3,v:0,marker:0,braking:false,emerg:false,moved:false,stars:0,perfect:0,helped:0,quizCount:0,doorOpen:null,used:new Set(),bridgeShown:false,sayOk:0,sayCount:0,sayTask:null,listening:false});
   G.side=ST.map(()=>rnd(['left','right']));
   G.platforms=[{start:-35,end:4,side:sideNum(G.side[0]),name:ST[0].en,marker:0}];
+  $('punch').hidden=true;$('story').hidden=true;document.body.classList.remove('storymode');
   $('title').hidden=true;$('end').hidden=true;$('quiz').hidden=true;$('sayCard').hidden=true;if(REC)try{REC.abort();}catch(e){}$('bC').classList.remove('ready');
   G.state='depart';
   G.doorOpen=G.side[0];G.doorT=1;G.doorTarget=1;startExchange();
-  await speak(`Welcome, Driver Seungwoo! This is ${lineName(LV)}. Today we go to ${ST[LAST].en}.`);
+  /* no welcome announcement: clear the subtitle and give the first exchange a moment */
+  $('sWho').innerHTML='&nbsp;';$('sEn').innerHTML='&nbsp;';await sleep(1200);
   if(tk!==G.token)return;
   closingSequence(tk);
 }
 async function closingSequence(tk){
   while(exchanging()){await sleep(200);if(tk!==G.token)return;}
+  leanIn();
   await startAnnounce(closeLine(),'close',G.i<LAST?ST[G.i+1].en:'');if(tk!==G.token)return;
   stepBack();await sleep(700);if(tk!==G.token)return;
   waitClose();
 }
-function waitClose(){G.state='boarding';$('bC').classList.add('ready');toast('Close the doors!',1800);}
+function waitClose(){G.state='boarding';$('bC').classList.add('ready');toast('Close the doors!',1800,true);}
 function closeDoors(){
   const b=$('bC');b.classList.add('press');setTimeout(()=>b.classList.remove('press'),120);
   if(G.state!=='boarding'){if(G.state==='run')toast('The doors are closed.',1000);return;}
@@ -785,9 +921,10 @@ async function startSegment(tk){
   await startAnnounce(nextLine(s),'next',s.en);if(tk!==G.token)return;
   G.state='run';toast('Hold ↑ to go!',1600);
 }
-function nextLine(s){const e=/\.$/.test(s.en)?'':'.';
+function nextLine(s){if(isKo(G.i))return KO.next(s);const e=/\.$/.test(s.en)?'':'.';
   return LV.tier===1?`The next stop is ${s.en}${e}`:LV.tier===2?`The next stop is ${s.en}${e} Please get ready to get off.`:`We will soon arrive at ${s.en}${e}`;}
 function doorAnnLine(side){const s=ST[G.i],e=/\.$/.test(s.en)?'':'.';
+  if(isKo(G.i))return KO.door(s,KSIDE[side],G.i===LAST);
   return LV.tier===1?`This stop is ${s.en}${e} The doors are on your ${side}.`
     :LV.tier===2?`This stop is ${s.en}${e} The doors are on your ${side}. Please mind the gap.`
     :`This station is ${s.en}${e} The doors will open on your ${side}.`;}
@@ -795,22 +932,23 @@ const esc=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
 function showDoorBlank(t){const i=t.target.lastIndexOf(t.side);
   $('sayTarget').innerHTML=esc(t.target.slice(0,i))+'<span class="miss">_____</span>'+esc(t.target.slice(i+t.side.length));}
 function startDoorAnnounce(){
-  return new Promise(res=>{const side=G.side[G.i],target=doorAnnLine(side);
-    G.sayTask={kind:'doorAnn',target,side,station:ST[G.i].en,tries:0,resolve:res,tk:G.token,done:false,listen:target.replace(side,'left or right')};
-    G.state='announce';G.sayCount++;$('sayWho').textContent='Your announcement';showDoorBlank(G.sayTask);
+  return new Promise(res=>{const ko=isKo(G.i),dir=G.side[G.i],side=ko?KSIDE[dir]:dir,other=ko?KSIDE[dir==='left'?'right':'left']:(dir==='left'?'right':'left');
+    const target=doorAnnLine(dir);
+    G.sayTask={kind:'doorAnn',target,side,other,ko,station:ST[G.i].en,tries:0,resolve:res,tk:G.token,done:false,listen:target.replace(side,ko?'왼쪽 또는 오른쪽':'left or right')};
+    G.state='announce';G.sayCount++;$('sayWho').textContent='Your announcement';$('sayTarget').classList.toggle('ko',ko);showDoorBlank(G.sayTask);
     $('sayHeard').textContent='Look at the platform. Is it on the left or right? Say the whole sentence.';
     setMic(false);$('sayCard').hidden=false;});}
 function judgeDoor(t,alts){
-  const other=t.side==='left'?'right':'left';
-  const hasC=alts.some(a=>norm(a).includes(t.side)),hasW=alts.some(a=>norm(a).includes(other));
+  const has=(a,w)=>t.ko?kc(a).includes(w):norm(a).includes(w);
+  const hasC=alts.some(a=>has(a,t.side)),hasW=alts.some(a=>has(a,t.other));
   if(hasW&&!hasC){t.tries++;bad();$('sayHeard').textContent+='  Look at the platform again!';
     if(t.tries>=2){t.reveal=true;renderTarget(t.target);$('sayHeard').textContent+=' The answer is shown. Say it again.';}return;}
   if(!hasC){bad();$('sayHeard').textContent+='  Say left or right!';return;}
-  const s=Math.max(...alts.map(a=>scoreSay(t.target,a,t.station).s));
+  const s=Math.max(...alts.map(a=>(t.ko?scoreKo(t.target,a):scoreSay(t.target,a,t.station)).s));
   if(s<.6){bad();$('sayHeard').textContent+='  Say the whole sentence. Try again!';return;}
-  renderTarget(t.target);good();finishAnnounce(true);
+  renderTarget(t.target);good();finishAnnounce(true,s);
 }
-function setKey(k,v){if(v&&k==='up'&&(G.state==='boarding'||G.state==='announce'))toast(G.state==='announce'?'Make the announcement first!':'Close the doors first!',1200);G.keys[k]=v;$(k==='up'?'bP':'bB').classList.toggle('press',v);}
+function setKey(k,v){if(v&&k==='up'&&(G.state==='boarding'||G.state==='announce'))toast(G.state==='announce'?'Make the announcement first!':'Close the doors first!',1200);G.keys[k]=v;$(k==='up'?'bP':'bB').classList.toggle('press',v);$('mc').dataset.pos=G.keys.down?'down':G.keys.up?'up':'';}
 function update(dt){
   G.braking=G.state==='run'&&G.keys.down;
   if(G.state!=='run')return;
@@ -849,23 +987,54 @@ async function openDoor(side){
   if(waitAnn){await sleep(900);if(tk!==G.token)return;toast('They are blocking the doors!',1500);await sleep(1200);if(tk!==G.token)return;
     await startAnnounce(waitLine(),'wait');if(tk!==G.token)return;releaseBoarders();}
   if(crowd){await sleep(2000);if(tk!==G.token)return;toast('Too many people!',1500);bad();await sleep(1300);if(tk!==G.token)return;
-    await startAnnounce('Please stop. The subway is full. It is dangerous.','crowd');if(tk!==G.token)return;stopBoarding();await sleep(500);}
+    await startAnnounce(crowdLine(),'crowd');if(tk!==G.token)return;stopBoarding();await sleep(500);}
   while(exchanging()){await sleep(200);if(tk!==G.token)return;}
   await sleep(700);if(tk!==G.token)return;
-  const q=makeQuiz();
+  const q=isKo(G.i)?null:makeQuiz();
   if(q){await runQuiz(q);if(tk!==G.token)return;await sleep(300);}
   closingSequence(tk);
 }
-function closeLine(){
+function closeLine(){if(isKo(G.i))return KO.close;
   return LV.tier===3?'The doors are closing. Please do not rush.':'The doors are closing. Please step back.';}
-function waitLine(){return LV.tier===3?'Please wait. Let people get off first.':'Please let people get off first.';}
+function waitLine(){if(isKo(G.i))return KO.wait;return LV.tier===3?'Please wait. Let people get off first.':'Please let people get off first.';}
+const crowdLine=()=>isKo(G.i)?KO.crowd:'Please stop. The subway is full. It is dangerous.';
+
+/* ---------- Korean stations (real Seoul subway announcements) ---------- */
+const isKo=i=>!!LV.koAlt&&i%2===1&&!!ST[i]&&!!ST[i].ko;
+const hasKo=t=>/[가-힣]/.test(t);
+const KSIDE={left:'왼쪽',right:'오른쪽'};
+const koSt=s=>/역$/.test(s.ko)?s.ko:s.ko+'역';
+/* 으로 after a final consonant (except ㄹ), 로 otherwise */
+const euro=w=>{const c=w.charCodeAt(w.length-1)-0xac00;if(c<0||c>11171)return w+'로';const f=c%28;return w+(f===0||f===8?'로':'으로');};
+const KO={
+  next:s=>`다음 역은 ${koSt(s)}입니다.`,
+  door:(s,side,last)=>last
+    ?`이번 역은 이 열차의 마지막 역인 ${koSt(s)}입니다. 내리실 문은 ${side}입니다. 모두 내려주시기 바랍니다.`
+    :`이번 역은 ${s.ko}, ${koSt(s)}입니다. 내리실 문은 ${side}입니다.`+(s.tr.length
+      ?` ${euro(s.tr.map(t=>t.ko).join(', '))} 가실 고객께서는 이번 역에서 갈아타시기 바랍니다.`
+      :' 타는 곳과 전동차 사이가 넓으니 내리실 때 조심하시기 바랍니다.'),
+  close:'출입문 닫습니다. 한 걸음 물러서 주시기 바랍니다.',
+  wait:'내리실 분 먼저 내리신 다음에 타시기 바랍니다.',
+  crowd:'열차가 혼잡하오니 다음 열차를 이용해 주시기 바랍니다.',
+};
+/* Korean judging: compare without spaces/punctuation; spoken line numbers ("구호선") become digits */
+const KNUM={일:1,이:2,삼:3,사:4,오:5,육:6,칠:7,팔:8,구:9};
+const kc=s=>s.replace(/[\s.,!?·'"’]/g,'').replace(/([일이삼사오육칠팔구])호선/g,(m,d)=>KNUM[d]+'호선');
+function scoreKo(target,heard){const h=kc(heard);let tot=0,ok=0;
+  const marks=target.split(' ').map(w=>{const n=kc(w);if(!n)return'';tot++;if(h.includes(n)){ok++;return'hit';}return'miss';});
+  return{marks,s:tot?ok/tot:0};}
 
 /* ---------- kid makes the announcement (speech recognition) ---------- */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let REC=null;
-function sayLine(i){const n=ST[i+1].en,e=/\.$/.test(n)?'':'.';
-  return LV.tier===1?`The next stop is ${n}${e}`:LV.tier===2?`The next stop is ${n}${e} Please mind the gap.`:`We will soon arrive at ${n}${e} Please watch your step.`;}
-const norm=s=>s.toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(Boolean);
+/* speech recognition often writes numbers as digits ("2 stops", "3:00", "3rd"); turn them into words */
+const ONES=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+const TENS=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+const ORD={one:'first',two:'second',three:'third',five:'fifth',eight:'eighth',nine:'ninth',twelve:'twelfth'};
+const numWord=n=>n<20?ONES[n]:TENS[Math.floor(n/10)]+(n%10?' '+ONES[n%10]:'');
+const ordWord=n=>{const w=numWord(n).split(' '),l=w.pop();w.push(ORD[l]||(l.endsWith('y')?l.slice(0,-1)+'ieth':l+'th'));return w.join(' ');};
+const spellNums=s=>s.replace(/\b(\d{1,2}):00\b/g,'$1 oclock').replace(/\b(\d{1,2})(st|nd|rd|th)\b/g,(m,d)=>ordWord(+d)).replace(/\b\d{1,2}\b/g,d=>numWord(+d));
+const norm=s=>spellNums(s.toLowerCase().replace(/[’']/g,'')).replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(Boolean);
 function renderTarget(t,marks){$('sayTarget').innerHTML=t.split(' ').map((w,k)=>`<span class="${marks?marks[k]:''}">${w}</span>`).join(' ');}
 function scoreSay(target,heard,station){
   const hw=norm(heard),st=new Set(norm(station));let tot=0,ok=0;
@@ -902,8 +1071,8 @@ function stopRec(){if(!G.listening||!REC)return;const r=REC;if(Date.now()-G.recS
   setTimeout(()=>{if(REC===r)try{r.stop();}catch(e){}},450);}
 function startAnnounce(line,kind,station){
   return new Promise(res=>{const target=line;
-    G.sayTask={target,station:station||'',kind,crowd:kind==='crowd',tries:0,resolve:res,tk:G.token,done:false};G.state='announce';G.sayCount++;$('sayWho').textContent='Your announcement';
-    renderTarget(target);G.last={en:target,who:'ann'};
+    G.sayTask={target,station:station||'',kind,crowd:kind==='crowd',ko:hasKo(target),tries:0,resolve:res,tk:G.token,done:false};G.state='announce';G.sayCount++;$('sayWho').textContent='Your announcement';
+    $('sayTarget').classList.toggle('ko',G.sayTask.ko);renderTarget(target);G.last={en:target,who:'ann'};
     $('sayHeard').textContent=SR?'Hold the radio button (or M) while you read it. Let go when you finish.':'Voice check does not work in this browser. Please open the game in Chrome.';
     setMic(false);$('sayCard').hidden=false;});}
 function speakBtn(){
@@ -912,7 +1081,7 @@ function speakBtn(){
   if(!SR){$('sayHeard').textContent='Voice check does not work in this browser. Please open the game in Chrome.';return;}
   try{speechSynthesis.cancel();}catch(e){}
   let heard='',alts=[],err=null;
-  const r=new SR();REC=r;r.lang='en-US';r.interimResults=true;r.maxAlternatives=3;r.continuous=true;
+  const r=new SR();REC=r;r.lang=t.ko?'ko-KR':'en-US';r.interimResults=true;r.maxAlternatives=3;r.continuous=true;
   if(t.kind==='quiz')renderQuiz(t);else if(t.kind==='doorAnn'&&!t.reveal)showDoorBlank(t);else renderTarget(t.target);$('sayHeard').textContent='● Recording… Say it now!';
   r.onresult=e=>{let txt='';for(const x of e.results)txt+=x[0].transcript+' ';heard=txt;alts=[txt];
     if(e.results.length===1)for(let a=1;a<e.results[0].length;a++)alts.push(e.results[0][a].transcript);
@@ -924,17 +1093,18 @@ function speakBtn(){
     if(!heard.trim()){$('sayHeard').textContent=G.shortPress?'Keep holding the button while you talk!':'I didn’t hear you. Hold the button and try again!';return;}
     if(t.kind==='quiz'){judgeQuiz(t,alts);return;}
     if(t.kind==='doorAnn'){judgeDoor(t,alts);return;}
-    const best=alts.map(a=>scoreSay(t.target,a,t.station)).sort((a,b)=>b.s-a.s)[0];renderTarget(t.target,best.marks);
-    if(best.s>=.7){good();finishAnnounce(true);return;}
+    const best=alts.map(a=>t.ko?scoreKo(t.target,a):scoreSay(t.target,a,t.station)).sort((a,b)=>b.s-a.s)[0];renderTarget(t.target,best.marks);
+    if(best.s>=.7){good();finishAnnounce(true,best.s);return;}
     t.tries++;bad();
     if(t.tries>=2){$('sayHeard').textContent='Listen carefully, then hold the button and try again!';say(t.target,'ann');}
     else $('sayHeard').textContent+='  Almost! Red words are missing. Try again.';};
   try{r.start();G.listening=true;setMic(true);pttSfx(true);setTimeout(()=>{if(REC===r)try{r.stop();}catch(e){}},12000);}catch(e){setMic(false);$('sayHeard').textContent='The microphone could not start. Hold the button again.';}
 }
-async function finishAnnounce(ok){
+async function finishAnnounce(ok,s=0){
   const t=G.sayTask;if(!t||t.done)return;t.done=true;if(REC)try{REC.abort();}catch(e){}G.listening=false;
-  if(ok){G.sayOk++;toast('Great announcement!',1300);}
-  G.kidAnnounced=false;await sleep(ok?1300:300);
+  const wow=ok&&s>=PRAISE_AT,quick=t.kind==='close';/* close: get the card out of the way so the step-back is visible */
+  if(ok){G.sayOk++;if(wow)praise(t.ko,quick);else toast('Great announcement!',1300,quick);}
+  await sleep(quick?250:wow?1500:ok?1300:300);
   $('sayCard').hidden=true;G.sayTask=null;if(t.tk===G.token)t.resolve();
 }
 
@@ -979,15 +1149,14 @@ const TALK={
   ()=>[`How long does it take to get to ${ST[LAST].en}?`,'It takes about fifteen minutes.','It’s fifteen meters long.','It took me a long time.'],
  ],
  air:[
-  ['Where are you going?','I’m going to Jeju Island.','I went to Jeju last year.','It’s an airplane.'],
-  ['How long will you stay there?','I will stay for three days.','I stayed there yesterday.','It’s three meters long.'],
-  ['Excuse me. Where is the check-in counter?','It’s on the third floor.','It’s three o’clock.','I checked my bag.'],
-  ['Do you have your passport?','Yes, I have it in my bag.','Yes, I’m a passport.','No, I don’t like it.'],
-  ['What will you do in Jeju?','I will swim at the beach.','I swam at the beach yesterday.','I’m good at swimming.'],
-  ['Which is faster, the airplane or the subway?','The airplane is faster.','The subway is the biggest.','I took the airplane.'],
-  ['Look! What is that in the sky?','It’s an airplane.','It’s a subway.','It was a bird.'],
-  ['Wow, we are on a long bridge! What is under it?','The sea is under the bridge.','The bridge is under the sea.','I am under the bridge.'],
-  ['Have a nice trip!','Thank you! You too.','Yes, I did.','No, I can’t.'],
+  ['Look! What is that in the sky?','It’s an airplane.','It’s Monday.','I’m ten.'],
+  ['Is this subway going to the airport?','Yes, it is.','Yes, I can.','No, it’s a cat.'],
+  ['Do you like airplanes?','Yes, I do. I love airplanes!','Yes, it is.','No, it isn’t a dog.'],
+  ['Can you see the sea?','Yes, I can.','Yes, it is.','I’m fine.'],
+  ['What color is the sea?','It’s blue.','It’s Monday.','I’m happy.'],
+  ['Where is the exit?','It’s over there.','It’s Monday.','I’m happy.'],
+  ['Is this your bag?','Yes, it is. Thank you!','No, I can’t swim.','It’s sunny.'],
+  ['Hi! How are you today?','I’m fine, thank you.','I’m ten years old.','It’s on the table.'],
  ],
  out:[
   ['Look outside! What is that river?','It’s the Han River.','It’s a cat.','I’m ten.'],
@@ -1032,9 +1201,8 @@ function makeQuiz(){
 
 function drawPax(){
   const c=$('pax').getContext('2d');c.clearRect(0,0,16,16);
-  const col={h:rnd(['#2b1d14','#5a3a1e','#d9b24a','#1a1a1a','#a8452a']),s:rnd(['#f2c9a0','#d9a477','#a8714a']),e:'#222',m:'#b5524a',
-    t:rnd(['#e8433f','#3b7dd8','#f2a03d','#7a5cc7','#2fae7a']),p:'#3a4250',k:'#222'};
-  PAX.forEach((r,y)=>[...r].forEach((ch,x)=>{if(col[ch]){c.fillStyle=col[ch];c.fillRect(x,y,1,1);}}));
+  const style=rnd(HSTYLE),col=headCols(style,Math.floor(Math.random()*120));
+  headRows(style).forEach((r,y)=>r.forEach((ch,x)=>{if(col[ch]){c.fillStyle=col[ch];c.fillRect(x,y,1,1);}}));
 }
 /* passenger questions are answered with the radio too */
 function renderQuiz(t,pick,cls){const list=t.reveal?[t.answer]:t.opts;
@@ -1048,43 +1216,30 @@ function judgeQuiz(t,alts){
   const best=sc[0],second=sc[1];
   if(best.d<(t.reveal?.5:.45)){bad();$('sayHeard').textContent+='  I didn’t catch that. Try again!';return;}
   if(!t.reveal&&second&&best.d-second.d<.04){$('sayHeard').textContent+='  Say it a little more clearly!';return;}
-  if(best.o===t.answer){renderQuiz(t,best.o,'ok');good();finishQuiz(!t.reveal);return;}
+  if(best.o===t.answer){renderQuiz(t,best.o,'ok');good();finishQuiz(!t.reveal,best.d);return;}
   t.tries++;bad();renderQuiz(t,best.o,'bad');
   if(t.tries>=2){t.reveal=true;t.listen=t.answer;t.listenWho='ann';
     setTimeout(()=>{if(t.done)return;renderQuiz(t);$('sayHeard').textContent='Listen, then say this answer into the radio.';say(t.answer,'ann');},900);}
   else $('sayHeard').textContent+='  That’s not the right answer. Try again!';
 }
-async function finishQuiz(counted){
+async function finishQuiz(counted,d=0){
   const t=G.sayTask;if(!t||t.done)return;t.done=true;if(REC)try{REC.abort();}catch(e){}G.listening=false;setMic(false);
-  if(counted){G.helped++;toast('Great answer!',1200);}
+  if(counted){G.helped++;if(d>=PRAISE_AT)praise(false);else toast('Great answer!',1200);}
   if(t.tk===G.token)await speak(LV.thanks,'pax');
-  await sleep(300);$('sayCard').hidden=true;$('quiz').hidden=true;$('opts').parentElement.hidden=false;G.sayTask=null;
+  await sleep(300);$('sayCard').hidden=true;$('quiz').hidden=true;G.sayTask=null;
   if(t.tk===G.token)t.resolve();
 }
 function runQuiz(q){
   G.quizCount++;
   return new Promise(res=>{
-    drawPax();$('qEn').textContent=q.en;$('opts').innerHTML='';$('opts').parentElement.hidden=true;$('quiz').hidden=false;
+    drawPax();$('qEn').textContent=q.en;$('quiz').hidden=false;
     G.sayTask={kind:'quiz',target:q.answer,answer:q.answer,opts:q.opts,q:q.en,tries:0,reveal:false,resolve:res,tk:G.token,done:false,station:''};
-    G.state='announce';renderQuiz(G.sayTask);
+    G.state='announce';$('sayTarget').classList.remove('ko');renderQuiz(G.sayTask);
     $('sayWho').textContent='Answer the passenger';
     $('sayHeard').textContent=SR?'Choose the right answer and say it into the radio.':'Voice check does not work in this browser. Please open the game in Chrome.';
     setMic(false);$('sayCard').hidden=false;
     speak(q.en,'pax');
   });
-}
-async function choose(k){
-  const q=G.quiz;if(!q||q.locked||G.state!=='quiz'||k>=q.opts.length)return;
-  const btns=[...$('opts').children];
-  if(q.opts[k]===q.answer){q.locked=true;btns[k].classList.add('ok');G.helped++;good();await speak(LV.thanks,'pax');}
-  else{
-    q.tries++;btns[k].classList.add('bad');bad();
-    if(q.tries<2){toast('Try again!',1000);return;}
-    q.locked=true;btns[q.opts.indexOf(q.answer)].classList.add('ok');
-    await speak(`The answer is: ${q.answer}`,'ann');
-  }
-  if(q.tk!==G.token)return;
-  await sleep(400);$('quiz').hidden=true;G.quiz=null;q.resolve();
 }
 function endGame(){
   G.state='end';
@@ -1100,12 +1255,25 @@ function endGame(){
 function showMenu(){G.token++;G.state='title';try{speechSynthesis.cancel();}catch(e){}G.sel=Math.min(unlocked,LEVELS.length)-1;buildLevels();$('end').hidden=true;$('title').hidden=false;}
 
 /* ---------- input ---------- */
+/* capture the pointer so a sliding finger keeps holding until it is lifted */
+const capture=(b,e)=>{try{b.setPointerCapture(e.pointerId);}catch(err){}};
 function hold(id,key){const b=$(id);
-  b.addEventListener('pointerdown',e=>{e.preventDefault();ac();setKey(key,true);});
-  ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>setKey(key,false)));}
+  b.addEventListener('pointerdown',e=>{e.preventDefault();capture(b,e);ac();setKey(key,true);});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>setKey(key,false)));}
 hold('bP','up');hold('bB','down');
-(()=>{const b=$('ptt');b.addEventListener('pointerdown',e=>{e.preventDefault();ac();speakBtn();});
-  ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,stopRec));})();
+function setView(v){G.view=v;$('vOut').classList.toggle('sel',v!=='cab');$('vCab').classList.toggle('sel',v==='cab');
+  if(v==='cab'&&G.state!=='run'&&G.state!=='title')toast('Cab view starts when you drive.',1400,true);}
+$('vOut').addEventListener('click',()=>setView('out'));$('vCab').addEventListener('click',()=>setView('cab'));
+/* drive lever: drag up = power, down = brake, let go = back to neutral */
+(()=>{const m=$('mc');let on=false;
+  const pos=e=>{const r=m.getBoundingClientRect(),y=(e.clientY-r.top)/r.height;return y<.38?'up':y>.62?'down':'';};
+  const apply=p=>{if(G.keys.up!==(p==='up'))setKey('up',p==='up');if(G.keys.down!==(p==='down'))setKey('down',p==='down');
+    m.setAttribute('aria-valuetext',p==='up'?'power':p==='down'?'brake':'neutral');};
+  m.addEventListener('pointerdown',e=>{e.preventDefault();capture(m,e);ac();on=true;m.classList.add('grab');apply(pos(e));});
+  m.addEventListener('pointermove',e=>{if(on)apply(pos(e));});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>m.addEventListener(ev,()=>{if(!on)return;on=false;m.classList.remove('grab');apply('');}));})();
+(()=>{const b=$('ptt');b.addEventListener('pointerdown',e=>{e.preventDefault();capture(b,e);ac();speakBtn();});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,stopRec));})();
 $('sListen').onclick=()=>{const t=G.sayTask;if(t&&!G.listening)say(t.listen||(t.kind==='quiz'?t.q:t.target),t.listenWho||(t.kind==='quiz'?'pax':'ann'));};
 $('bC').onclick=closeDoors;$('pC').onclick=closeDoors;$('pL').onclick=()=>openDoor('left');$('pR').onclick=()=>openDoor('right');$('bL').onclick=()=>openDoor('left');$('bR').onclick=()=>openDoor('right');
 $('startBtn').onclick=()=>startGame(G.sel);
@@ -1121,9 +1289,12 @@ $('bReplay').onclick=()=>{if(G.last)say(G.last.en,G.last.who);};
   ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,cancel));})();
 addEventListener('keydown',e=>{
   if(e.repeat)return;
+  if(G.state==='punch'){if(e.key==='Enter'||e.code==='Space'){e.preventDefault();startStory();}return;}
+  if(G.state==='story'){if(e.key==='Escape')STORY.skipAll=true;if(e.key==='Enter'||e.code==='Space'||e.key==='Escape'){e.preventDefault();STORY.next=true;}return;}
+  if((e.key==='v'||e.key==='V')&&G.state!=='title'){setView(G.view==='cab'?'out':'cab');return;}
   if(G.state==='title'){
     if(e.key==='Enter'||e.code==='Space'){e.preventDefault();startGame(G.sel);return;}
-    if(['1','2','3'].includes(e.key)&&+e.key<=unlocked){G.sel=+e.key-1;buildLevels();}
+    if(/^[1-9]$/.test(e.key)&&+e.key<=Math.min(unlocked,LEVELS.length)){G.sel=+e.key-1;buildLevels();}
     if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();G.sel=Math.max(0,Math.min(unlocked-1,G.sel+(e.key==='ArrowRight'?1:-1)));buildLevels();}
     return;
   }
@@ -1134,7 +1305,6 @@ addEventListener('keydown',e=>{
   if(e.key==='ArrowDown'){e.preventDefault();setKey('down',true);return;}
   if(e.key==='ArrowLeft'){e.preventDefault();openDoor('left');}
   else if(e.key==='ArrowRight'){e.preventDefault();openDoor('right');}
-  else if(['1','2','3'].includes(e.key))choose(+e.key-1);
   else if(e.key==='m'||e.key==='M')speakBtn();
   else if(e.key==='r'||e.key==='R')$('bReplay').click();
 });
@@ -1145,14 +1315,109 @@ addEventListener('keyup',e=>{
 });
 addEventListener('blur',()=>{setKey('up',false);setKey('down',false);});
 
+/* ---------- going to work: a short story before the level menu ---------- */
+const STORY={i:0,t:0,next:false,skipAll:false};
+const fr=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));};
+/* first-person white glove; (x,y) is the fingertip, the sleeve comes in from the lower right */
+function glove(x,y,press){if(x>W+20)return;y+=press?3:0;
+  ctx.fillStyle='#1f2f5a';ctx.beginPath();ctx.moveTo(x+10,y+24);ctx.lineTo(x+30,y+22);ctx.lineTo(x+86,H+10);ctx.lineTo(x+52,H+10);ctx.fill();
+  fr(x+8,y+22,24,6,'#f4f4ee');
+  fr(x-3,y-1,9,15,'#0b0e11');fr(x-7,y+9,32,20,'#0b0e11');fr(x-11,y+15,8,11,'#0b0e11');
+  fr(x-2,y,7,13,'#f4f4ee');fr(x-6,y+10,30,18,'#f4f4ee');fr(x-10,y+16,6,9,'#f4f4ee');fr(x+6,y+10,18,4,'#d9dde3');fr(x+2,y+22,22,6,'#d9dde3');}
+/* keyframes [t,x,y,press] -> glove position at time t */
+function handAt(t,keys){let a=keys[0];for(const k of keys){if(k[0]<=t)a=k;}const i=keys.indexOf(a),b=keys[i+1];
+  if(!b)return{x:a[1],y:a[2],press:!!a[3]};const f=Math.min(1,(t-a[0])/(b[0]-a[0])),e=f*f*(3-2*f);
+  return{x:a[1]+(b[1]-a[1])*e,y:a[2]+(b[2]-a[2])*e,press:!!a[3]&&f<.5};}
+const OFF=[340,310];
+function bellSfx(){for(let k=0;k<2;k++)for(let i=0;i<8;i++)tone(i%2?1568:1319,k*.55+i*.05,.045,'square',.06);}
+/* shared cab view, looking forward over the driver's shoulder */
+function cabScene(t,o){
+  fr(0,0,W,H,'#14171c');
+  const vx=240,vy=82;ctx.strokeStyle='#2a3038';ctx.lineWidth=1;
+  for(let k=0;k<6;k++){const s=1/(1+k*.7);ctx.strokeRect(vx-200*s,vy-70*s,400*s,150*s);}
+  ctx.strokeStyle='#8d949f';ctx.beginPath();ctx.moveTo(vx-4,vy+10);ctx.lineTo(150,150);ctx.moveTo(vx+4,vy+10);ctx.lineTo(330,150);ctx.stroke();
+  for(let k=0;k<6;k++){const s=1/(1+k*.7);fr(vx-190*s,vy-60*s,3,3,'#ffd866');fr(vx+188*s,vy-60*s,3,3,'#ffd866');}
+  fr(vx+60,vy-28,8,18,'#0b0e11');fr(vx+62,vy-26+(o.green?8:0),4,4,o.green?'#3fdc7a':'#e8433f');
+  fr(0,0,W,12,'#1a2026');ctx.fillStyle='#1a2026';
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(40,0);ctx.lineTo(28,150);ctx.lineTo(0,150);ctx.fill();
+  ctx.beginPath();ctx.moveTo(W,0);ctx.lineTo(W-40,0);ctx.lineTo(W-28,150);ctx.lineTo(W,150);ctx.fill();
+  /* console with colorful buttons */
+  fr(0,146,W,124,'#22304a');fr(0,146,W,4,'#3a4a6a');
+  const lit=o.lamps||0,cols=['#ffd23f','#e8433f','#3fdc7a','#f4f4ee','#ffd23f','#3fdc7a','#e8433f','#ffd23f'];
+  for(let r=0;r<2;r++)for(let k=0;k<6;k++){const on=(r*6+k)<lit;fr(26+k*16,162+r*16,12,12,'#0b111c');fr(28+k*16,164+r*16,8,8,on?cols[k]:shade(cols[k],-110));}
+  fr(28,200,88,14,'#f4f4ee');ctx.fillStyle='#1b2329';ctx.font='8px "Press Start 2P", monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('1907',72,208);
+  /* TGIS screen */
+  fr(130,156,108,62,'#0b111c');fr(134,160,100,54,o.tgis>0?'#0b2a1a':'#05080a');
+  if(o.tgis>0&&o.tgis<1){fr(144,182,80,6,'#16351f');fr(144,182,80*o.tgis,6,'#3fdc7a');}
+  if(o.tgis>=1){ctx.fillStyle='#3fdc7a';ctx.font='8px "Press Start 2P", monospace';ctx.fillText('TGIS OK',184,172);
+    for(let k=0;k<5;k++)fr(144+k*17,202-(4+k*4),12,4+k*4,'#2fae7a');fr(144,204,80,2,'#2fae7a');}
+  /* master controller: N in the middle, F (forward) toward the front */
+  const mx=392,my=200;fr(mx-6,my-34,12,68,'#0b0e11');
+  ctx.fillStyle='#c9d2df';ctx.font='7px "Press Start 2P", monospace';ctx.fillText('F',mx+30,my-24);ctx.fillText('N',mx+30,my);ctx.fillText('R',mx+30,my+24);
+  const ly=my-24*(o.lever||0);fr(mx-22,ly-6,44,12,'#c7ccd4');fr(mx-22,ly+3,44,3,'#8d949f');
+  /* horn pedal */
+  const pd=o.pedal?5:0;fr(30,236,64,30,'#141c2c');fr(40,244+pd,44,14,o.pedal?'#ffd23f':'#5a6270');fr(40,244+pd,44,3,'#8d949f');
+  if(o.hand)glove(Math.round(o.hand.x),Math.round(o.hand.y),o.hand.press);
+}
+const SCENES=[
+ {cap:'오늘도 출근! 객실 맨 끝 운전실 문을 열어요',tts:'오늘도 출근! 객실 맨 끝, 운전실 문을 열어요.',dur:3.4,sfx:[[1.1,doorOpenSfx]],draw:t=>{
+   fr(0,0,W,H,'#e9ebe6');fr(0,0,W,24,'#f4f5f1');fr(60,8,120,6,'#fffbe0');fr(300,8,120,6,'#fffbe0');
+   fr(0,210,W,60,'#6b6f73');fr(0,150,170,44,'#3f8a4f');fr(0,140,170,12,'#2f6e3d');fr(310,150,170,44,'#3f8a4f');fr(310,140,170,12,'#2f6e3d');
+   for(let x=10;x<170;x+=26){fr(x+10,30,2,40,'#b9bdb6');fr(x+4,70,14,4,'#f2c230');}
+   for(let x=320;x<W;x+=26){fr(x+10,30,2,40,'#b9bdb6');fr(x+4,70,14,4,'#f2c230');}
+   fr(180,40,120,170,'#9aa1a8');const dx=182,dy=44,dw=116,dh=166;
+   fr(dx,dy,dw,dh,'#22304a');const cols=['#ffd23f','#e8433f','#3fdc7a','#f4f4ee'];
+   for(let k=0;k<10;k++)fr(dx+12+k*10,dy+110,6,6,cols[(k+Math.floor(t*4))%4]);fr(dx+30,dy+20,56,40,'#14171c');
+   const open=Math.max(0,Math.min(1,(t-1.1)/.7));ctx.save();ctx.beginPath();ctx.rect(dx,dy,dw,dh);ctx.clip();
+   const px0=dx+open*dw;fr(px0,dy,dw,dh,'#c9ced3');fr(px0+30,dy+24,56,48,'#1d2a35');fr(px0+8,dy+80,5,26,'#5a6270');ctx.restore();
+   fr(196,48,88,14,'#1b2329');ctx.fillStyle='#ffd23f';ctx.font='bold 10px "Malgun Gothic","Apple SD Gothic Neo",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('운전실',240,55);
+   const h=handAt(t,[[0,...OFF],[.6,192,128],[.8,192,128,1],[1.1,192,128],[1.8,dx+dw-10,128],[2.4,...OFF]]);glove(h.x,h.y,h.press);}},
+ {cap:'차상컴퓨터(TGIS) 화면을 눌러 켜요',tts:'차상컴퓨터 화면을 눌러 켜요.',dur:3.2,sfx:[[.65,()=>tone(988,0,.06,'square',.05)],[2,()=>{tone(1319,0,.08,'square',.05);tone(1760,.1,.12,'square',.05);}]],draw:t=>
+   cabScene(t,{tgis:Math.max(0,Math.min(1,(t-.7)/1.3)),hand:handAt(t,[[0,...OFF],[.5,184,186],[.6,184,186,1],[.85,184,186],[1.4,...OFF]])})},
+ {cap:'버튼을 눌러 램프가 모두 켜지는지 점검해요',tts:'버튼을 눌러서, 램프가 모두 켜지는지 점검해요.',dur:3.2,
+   sfx:[[.6,()=>tone(1175,0,.04,'square',.05)],[1.05,()=>tone(1175,0,.04,'square',.05)],[1.5,()=>tone(1175,0,.04,'square',.05)],[1.9,()=>tone(1568,0,.1,'square',.05)]],draw:t=>
+   cabScene(t,{tgis:1,lamps:Math.floor(Math.max(0,t-.6)*9),hand:handAt(t,[[0,...OFF],[.5,48,170],[.6,48,170,1],[.75,48,170],[.95,96,170],[1.05,96,170,1],[1.2,96,170],[1.4,80,186],[1.5,80,186,1],[1.65,80,186],[2.3,...OFF]])})},
+ {cap:'주간제어기를 중립(N)에서 전진(F)으로!',tts:'주간제어기를 중립에서 전진으로!',dur:3,sfx:[[.9,()=>tone(160,0,.06,'square',.12)]],draw:t=>{
+   const lv=Math.max(0,Math.min(1,(t-.6)/.3));
+   const hand=t<.6?handAt(t,[[0,...OFF],[.5,392,196]]):t<2?{x:392,y:196-24*lv,press:false}:handAt(t,[[2,392,172],[2.6,...OFF]]);
+   cabScene(t,{tgis:1,lamps:12,lever:lv,hand});}},
+ {cap:'경적 페달을 살짝 밟으면… 따르릉따르릉 ♪',tts:'경적 페달을 살짝 밟으면, 따르릉 따르릉!',dur:3.2,sfx:[[.9,bellSfx]],draw:t=>{
+   cabScene(t,{tgis:1,lamps:12,lever:1,pedal:t>.8&&t<2.2});
+   if(t>.9){ctx.fillStyle='#ffd23f';ctx.font='bold 18px sans-serif';ctx.textAlign='center';
+     for(let k=0;k<3;k++){const a=t-.9-k*.3;if(a<0)continue;ctx.globalAlpha=Math.max(0,1-a/1.6);ctx.fillText('♪',110+k*28,240-a*50);}ctx.globalAlpha=1;}}},
+ {cap:'운행 준비 완료! 이제 출발해 볼까요?',tts:'운행 준비 완료! 이제 출발해 볼까요?',dur:3,draw:t=>{
+   cabScene(t,{tgis:1,lamps:12,lever:1,green:t>.5});
+   if(t>2.4){ctx.fillStyle=`rgba(0,0,0,${Math.min(1,(t-2.4)/.6)})`;ctx.fillRect(0,0,W,H);}}},
+];
+function drawStory(){ctx.imageSmoothingEnabled=false;const sc=SCENES[STORY.i];if(sc)sc.draw(Math.min(STORY.t,sc.dur));}
+/* click / Enter = next scene, 건너뛰기 or Esc = straight to the level menu */
+async function startStory(){
+  if(G.state!=='punch')return;ac();G.state='story';$('punch').hidden=true;$('story').hidden=false;document.body.classList.add('storymode');
+  STORY.skipAll=false;
+  for(let i=0;i<SCENES.length&&!STORY.skipAll;i++){const sc=SCENES[i];STORY.i=i;STORY.t=0;STORY.next=false;$('storyCap').textContent=sc.cap;
+    const fired=new Set();let talking=true;say(sc.tts,'ann').then(()=>talking=false);const t0=performance.now();
+    while(!STORY.skipAll){await sleep(30);STORY.t=(performance.now()-t0)/1000;
+      (sc.sfx||[]).forEach(([at,f],k)=>{if(STORY.t>=at&&!fired.has(k)){fired.add(k);f();}});
+      if(STORY.next||(STORY.t>=sc.dur&&!talking)||STORY.t>sc.dur+5)break;}}
+  try{speechSynthesis.cancel();}catch(e){}
+  if(G.state!=='story')return;
+  $('story').hidden=true;document.body.classList.remove('storymode');G.state='title';$('title').hidden=false;
+}
+$('punchBtn').addEventListener('click',startStory);
+$('story').addEventListener('click',e=>{if(e.target.id==='storySkip')STORY.skipAll=true;STORY.next=true;});
+G.state='punch';$('title').hidden=true;$('punch').hidden=false;
+
 /* ---------- loop ---------- */
 setLevel(0);G.sel=Math.min(unlocked,LEVELS.length)-1;buildLevels();
 G.platforms=[{start:-35,end:4,side:-1,name:ST[0].en,marker:0}];
 let lastT=performance.now();
-function loop(t){const dt=Math.min(.05,(t-lastT)/1000);lastT=t;update(dt);updateSound(dt);updatePeople(dt);
-  {const ob=onBridge();CAMBACK+=((ob?13:6)-CAMBACK)*Math.min(1,dt*1.1);VY+=((ob?-5.4:-3.4)-VY)*Math.min(1,dt*1.1);
+function loop(t){const dt=Math.min(.05,(t-lastT)/1000);lastT=t;update(dt);updateSparks(dt);updateWind(dt);updateSound(dt);updatePeople(dt);
+  {const ob=onBridge();CAMBACK+=((ob?13:6)-CAMBACK)*Math.min(1,dt*1.1);CVY+=((ob?-5.4:-3.4)-CVY)*Math.min(1,dt*1.1);
    if(ob&&G.state==='run'&&!G.bridgeShown){G.bridgeShown=true;toast('\u2726 '+LV.bridgeName+' \u2726',3200);speak(LV.bridgeSay,'ann');}}
-  if(G.doorTarget!==undefined){const dd=(G.doorTarget||0)-(G.doorT||0);G.doorT=(G.doorT||0)+Math.sign(dd)*Math.min(Math.abs(dd),dt/.55);}VX+=(camTarget()-VX)*Math.min(1,dt*1.5);draw();hud();requestAnimationFrame(loop);}
+  if(G.doorTarget!==undefined){const dd=(G.doorTarget||0)-(G.doorT||0);G.doorT=(G.doorT||0)+Math.sign(dd)*Math.min(Math.abs(dd),dt/.55);}CVX+=(camTarget()-CVX)*Math.min(1,dt*1.5);
+  {const ct=G.view==='cab'&&G.state==='run'?1:0;CAB+=(ct-CAB)*Math.min(1,dt*2.2);if(Math.abs(ct-CAB)<.003)CAB=ct;
+   CABE=CAB*CAB*(3-2*CAB);VX=CVX+(CAB_X-CVX)*CABE;VY=CVY+(CAB_Y-CVY)*CABE;}
+  draw();hud();requestAnimationFrame(loop);}
 (document.fonts&&document.fonts.load?document.fonts.load('8px "Press Start 2P"'):Promise.resolve()).catch(()=>{}).finally(()=>requestAnimationFrame(loop));
 </script>
 </body>
